@@ -58,6 +58,7 @@ public class ProdutoController {
 		model.setPreco(request.getPreco());
 		model.setQuantidade(request.getQuantidade());
 		model.setQuantidadeBloqueada(request.getQuantidadeBloqueada());
+		model.setDestaque(request.isDestaque());
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	@DeleteMapping("/produto/{id}")
