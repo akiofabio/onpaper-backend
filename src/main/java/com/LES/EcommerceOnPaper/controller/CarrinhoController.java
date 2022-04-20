@@ -72,8 +72,6 @@ public class CarrinhoController {
 				} 
 			}
 		}
-		
-		
 		model.setEndereco( request.getEndereco() );
 		model.setItens( request.getItens() );
 		model.setUltimoAdicionado( request.getUltimoAdicionado() );
