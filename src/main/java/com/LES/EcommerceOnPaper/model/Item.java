@@ -22,17 +22,27 @@ public class Item {
 	@Column(name = "ite_quantidade")
 	int quantidade;
 	
+	@Column(name = "ite_preco")
+	double preco;
+	
+	@Column(name = "ite_frete")
+	double frete;
+	
 	@OneToOne
 	Produto produto;
 	
 	public Item() {}
 	
-	public Item(String status, int quantidade, Produto produto) {
+	public Item(String status, int quantidade, double preco, double frete, Produto produto) {
 		super();
 		this.status = status;
 		this.quantidade = quantidade;
+		this.preco = preco;
+		this.frete = frete;
 		this.produto = produto;
 	}
+
+
 
 	public long getId() {
 		return id;
@@ -64,5 +74,21 @@ public class Item {
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+
+	public double getPreco() {
+		return preco;
+	}
+
+	public void setPreco(double preco) {
+		this.preco = preco;
+	}
+
+	public double getFrete() {
+		return frete;
+	}
+
+	public void setFrete(double frete) {
+		this.frete = frete;
 	}
 }

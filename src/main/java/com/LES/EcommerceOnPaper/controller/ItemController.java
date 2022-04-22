@@ -47,7 +47,8 @@ public class ItemController {
 		model.setStatus(request.getStatus());
 		model.setProduto(request.getProduto());
 		model.setQuantidade(request.getQuantidade());
-		
+		model.setPreco(request.getPreco());
+		model.setFrete(request.getFrete());
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	@DeleteMapping("/item/{id}")
