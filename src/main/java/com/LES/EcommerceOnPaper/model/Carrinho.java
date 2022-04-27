@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 
 
@@ -32,7 +33,8 @@ public class Carrinho {
 	@Column(name = "crr_ultimo_adicionado")
 	private Date ultimoAdicionado;
 	
-	@OneToMany(cascade = CascadeType.MERGE)
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OrderBy
 	private Set<Item> itens;
 	
 	public Carrinho() {}

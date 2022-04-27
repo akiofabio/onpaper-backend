@@ -73,4 +73,18 @@ public class UsuarioController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
+	
+	@GetMapping("/usuario/login/email={email}&senha={senha}")
+	public ResponseEntity<Object> getLogin( @PathVariable String email , @PathVariable String senha ) {
+		
+		Optional<Usuario> optional = service.findByEmail( email );
+		if(!optional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não Encontrada");
+		}
+		Usuario usuarioRes = optional.get();
+		if( !usuarioRes.getSenha().equals( senha ) ) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Usuario ou Senha Incorretos");
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
+	}
 }

@@ -3,6 +3,7 @@ package com.LES.EcommerceOnPaper.model;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
@@ -31,25 +32,25 @@ public class Cliente extends Usuario{
 	@Column(name = "cli_score")
 	private String score;
 	
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Telefone> telefones;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Endereco> enderecos;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cartao> cartoes;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Pedido> pedidos;
 
-	@OneToMany
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cupom> cupons;
 
-	@OneToOne
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Carrinho carrinho;
 
-	
+	public Cliente() {}
 	
 	public Cliente(String email, String senha, String tipo, String status, String nome, String cpf, String genero, Date dataNascimento, String score,
 			Set<Telefone> telefones, Set<Endereco> enderecos, Set<Cartao> cartoes, Set<Pedido> pedidos, Set<Cupom> cupons, Carrinho carrinho) {

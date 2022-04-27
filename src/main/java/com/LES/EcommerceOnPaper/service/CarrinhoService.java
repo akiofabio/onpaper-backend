@@ -29,7 +29,7 @@ public class CarrinhoService {
 	}
 	
 	public List<Carrinho> findAll() {
-		return repository.findAll();
+		return repository.findAllByOrderById();
 	}
 	
 	public Optional<Carrinho> findById(Long id) {
