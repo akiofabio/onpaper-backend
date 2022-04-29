@@ -30,7 +30,7 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	
-	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+	@OneToOne(cascade = { CascadeType.MERGE})
 	private Endereco endereco;
 
 	public Pedido() {}
