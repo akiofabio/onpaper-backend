@@ -24,7 +24,7 @@ public class Pedido {
 	@Column(name = "ped_status")
 	private String status;
 	
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.MERGE})
 	private Set<Item> itens;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
