@@ -47,7 +47,7 @@ public class CartaoController {
 		model.setNumero(request.getNumero());
 		model.setValidade(request.getValidade());
 		model.setPreferencial(request.isPreferencial());
-		
+		model.setBandeira(request.getBandeira());
 		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}

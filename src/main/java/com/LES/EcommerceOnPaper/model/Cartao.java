@@ -33,6 +33,22 @@ public class Cartao {
 	@Column(name = "car_preferencial")
 	private boolean preferencial;
 	
+	@Column(name = "car_bandeira")
+	private String bandeira;
+	
+	public Cartao() {}
+	
+	public Cartao(String nome, String numero, String codigoSeguranca, Date validade, boolean preferencial,
+			String bandeira) {
+		super();
+		this.nome = nome;
+		this.numero = numero;
+		this.codigoSeguranca = codigoSeguranca;
+		this.validade = validade;
+		this.preferencial = preferencial;
+		this.bandeira = bandeira;
+	}
+
 	public long getId() {
 		return id;
 	}
@@ -80,7 +96,13 @@ public class Cartao {
 	public void setPreferencial(boolean preferencial) {
 		this.preferencial = preferencial;
 	}
-	
-	
+
+	public String getBandeira() {
+		return bandeira;
+	}
+
+	public void setBandeira(String bandeira) {
+		this.bandeira = bandeira;
+	}
 	
 }
