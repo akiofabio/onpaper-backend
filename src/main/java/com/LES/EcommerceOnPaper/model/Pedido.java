@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -29,12 +30,12 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	
-	@Column(name = "ped_endereco")
-	private String endereco;
+	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.DETACH})
+	private Endereco endereco;
 
 	public Pedido() {}
 	
-	public Pedido(String status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, String endereco) {
+	public Pedido(String status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, Endereco endereco) {
 		this.status = status;
 		this.itens = itens;
 		this.meioDePagamentos = meioDePagamentos;
@@ -73,11 +74,11 @@ public class Pedido {
 		this.meioDePagamentos = meioDePagamentos;
 	}
 
-	public String getEndereco() {
+	public Endereco getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(String endereco) {
+	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
 }
