@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,5 +35,9 @@ public class PedidoService {
 	
 	public Optional<Pedido> findById(Long id) {
 		return repository.findById(id);
+	}
+
+	public List<Pedido> findByDatas(Date dataInicio, Date dataFinal) {
+		return repository.findByDataGreaterThanAndDataLessThan(dataInicio,dataFinal);
 	}
 }

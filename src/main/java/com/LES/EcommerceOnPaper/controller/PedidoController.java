@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,6 +46,7 @@ public class PedidoController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
+	
 	@DeleteMapping("/pedido/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id){
 		Optional<Pedido> optional = service.findById(id);
@@ -67,5 +69,10 @@ public class PedidoController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
+	}
+	
+	@GetMapping("/pedido/datas/dataInicio={dataInicio}&dataFinal={dataFinal}")
+	public ResponseEntity<List<Pedido>> getByDatas(@PathVariable Date dataInicio, @PathVariable Date dataFinal) {
+		return ResponseEntity.status(HttpStatus.OK).body(service.findByDatas(dataInicio,dataFinal));
 	}
 }

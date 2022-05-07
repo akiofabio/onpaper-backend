@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -24,7 +25,7 @@ public class Pedido {
 	@Column(name = "ped_status")
 	private String status;
 	
-	@OneToMany(cascade = {CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<Item> itens;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
@@ -32,14 +33,18 @@ public class Pedido {
 	
 	@OneToOne(cascade = { CascadeType.MERGE})
 	private Endereco endereco;
-
+	
+	@Column(name = "ped_data")
+	private Date data;
+	
 	public Pedido() {}
 	
-	public Pedido(String status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, Endereco endereco) {
+	public Pedido(String status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, Endereco endereco, Date data) {
 		this.status = status;
 		this.itens = itens;
 		this.meioDePagamentos = meioDePagamentos;
 		this.endereco = endereco;
+		this.data = data;
 	}
 
 	public long getId() {
@@ -81,4 +86,14 @@ public class Pedido {
 	public void setEndereco(Endereco endereco) {
 		this.endereco = endereco;
 	}
+
+	public Date getData() {
+		return data;
+	}
+
+	public void setData(Date data) {
+		this.data = data;
+	}
+	
+	
 }
