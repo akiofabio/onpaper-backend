@@ -23,7 +23,7 @@ public class Pedido {
 	private long id;
 	
 	@Column(name = "ped_status")
-	private String status;
+	private StatusPedido status;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<Item> itens;
@@ -31,20 +31,26 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	
-	@OneToOne(cascade = { CascadeType.MERGE})
-	private Endereco endereco;
+	@Column(name = "ped_endereco")
+	private String endereco;
 	
-	@Column(name = "ped_data")
-	private Date data;
+	@Column(name = "ped_endereco")
+	private String cep;
+	
+	@Column(name = "ped_frete")
+	private float frete;
 	
 	public Pedido() {}
-	
-	public Pedido(String status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, Endereco endereco, Date data) {
+
+	public Pedido(StatusPedido status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, String endereco,
+			String cep, float frete) {
+		super();
 		this.status = status;
 		this.itens = itens;
 		this.meioDePagamentos = meioDePagamentos;
 		this.endereco = endereco;
-		this.data = data;
+		this.cep = cep;
+		this.frete = frete;
 	}
 
 	public long getId() {
@@ -55,11 +61,11 @@ public class Pedido {
 		this.id = id;
 	}
 
-	public String getStatus() {
+	public StatusPedido getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(StatusPedido status) {
 		this.status = status;
 	}
 
@@ -79,21 +85,27 @@ public class Pedido {
 		this.meioDePagamentos = meioDePagamentos;
 	}
 
-	public Endereco getEndereco() {
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
 	}
 
-	public Date getData() {
-		return data;
+	public String getCep() {
+		return cep;
 	}
 
-	public void setData(Date data) {
-		this.data = data;
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
-	
-	
+
+	public float getFrete() {
+		return frete;
+	}
+
+	public void setFrete(float frete) {
+		this.frete = frete;
+	}
 }

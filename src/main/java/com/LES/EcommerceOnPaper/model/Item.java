@@ -18,29 +18,31 @@ public class Item {
 	private long id;
 	
 	@Column(name = "ite_status")
-	String status;
+	private String status;
 	
 	@Column(name = "ite_quantidade")
-	int quantidade;
+	private int quantidade;
 	
 	@Column(name = "ite_preco")
-	double preco;
+	private double preco;
 		
-	@OneToOne
-	Produto produto;
+	@Column(name = "ite_nomeProduto")
+	private String nomeProduto;
+	
+	@Column(name = "ite_idProduto")
+	private long idProduto;
 	
 	public Item() {}
 	
-	public Item(String status, int quantidade, double preco, Produto produto) {
+	public Item(String status, int quantidade, double preco, String nomeProduto, long idProduto) {
 		super();
 		this.status = status;
 		this.quantidade = quantidade;
 		this.preco = preco;
-		this.produto = produto;
+		this.nomeProduto = nomeProduto;
+		this.idProduto = idProduto;
 	}
-
-
-
+	
 	public long getId() {
 		return id;
 	}
@@ -65,19 +67,27 @@ public class Item {
 		this.quantidade = quantidade;
 	}
 
-	public Produto getProduto() {
-		return produto;
-	}
-
-	public void setProduto(Produto produto) {
-		this.produto = produto;
-	}
-
 	public double getPreco() {
 		return preco;
 	}
 
 	public void setPreco(double preco) {
 		this.preco = preco;
+	}
+
+	public String getNomeProduto() {
+		return nomeProduto;
+	}
+
+	public void setNomeProduto(String nomeProduto) {
+		this.nomeProduto = nomeProduto;
+	}
+
+	public long getIdProduto() {
+		return idProduto;
+	}
+
+	public void setIdProduto(long idProduto) {
+		this.idProduto = idProduto;
 	}
 }
