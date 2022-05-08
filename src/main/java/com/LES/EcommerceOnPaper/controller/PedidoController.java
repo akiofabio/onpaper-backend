@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LES.EcommerceOnPaper.model.Item;
+import com.LES.EcommerceOnPaper.model.MeioDePagamento;
 import com.LES.EcommerceOnPaper.model.Pedido;
 import com.LES.EcommerceOnPaper.service.ItemService;
+import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -28,15 +30,26 @@ public class PedidoController {
 	
 	final PedidoService service;
 	final ItemService itemService;
-
-	public PedidoController(PedidoService service, ItemService itemService) {
+	final MeioDePagamentoService meioDePagamentoService;
+	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService) {
 		super();
 		this.service = service;
 		this.itemService = itemService;
+		this.meioDePagamentoService = meioDePagamentoService;
 	}
 	
 	@PostMapping("/pedido")
 	public ResponseEntity<Object> create(@RequestBody Pedido request) {
+//		for(Item item : request.getItens()) {
+//			if(item.getId()==0) {
+//				item.setId(itemService.save(item).getId()) ;
+//			}
+//		}
+//		for(MeioDePagamento meio : request.getMeioDePagamentos()) {
+//			if(meio.getId()==0) {
+//				meio.setId(meioDePagamentoService.save(meio).getId()) ;
+//			}
+//		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	
