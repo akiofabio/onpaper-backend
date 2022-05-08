@@ -115,13 +115,15 @@ public class CarrinhoController {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Carrinho não Encontrado");
 		}
 		
-		Optional<Produto> produtoOptional = produtoService.findById(request.getProduto().getId());
+		Optional<Produto> produtoOptional = produtoService.findById(request.getIdProduto());
 		if(!produtoOptional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
 		}
 		Produto produto = produtoOptional.get();
 		produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada() +request.getQuantidade());
-		request.setProduto(produto);
+		produtoService.save(produto);
+		request.setIdProduto(produto.getId());
+		request.setNomeProduto(produto.getNome());
 		request.setStatus("DISONIVEL");
 		Carrinho model = optional.get();
 		model.getItens().add(request);

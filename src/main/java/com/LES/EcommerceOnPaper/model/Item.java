@@ -26,10 +26,10 @@ public class Item {
 	@Column(name = "ite_preco")
 	private double preco;
 		
-	@Column(name = "ite_nomeProduto")
+	@Column(name = "ite_nome_produto")
 	private String nomeProduto;
 	
-	@Column(name = "ite_idProduto")
+	@Column(name = "ite_id_produto")
 	private long idProduto;
 	
 	public Item() {}

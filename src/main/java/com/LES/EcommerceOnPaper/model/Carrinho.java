@@ -26,9 +26,11 @@ public class Carrinho {
 	@Column(name = "crr_id")
 	private long id;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "crr_end_id")
-	private Endereco endereco;
+	@Column(name = "crr_endereco")
+	private String endereco;
+	
+	@Column(name = "crr_id_endereco")
+	private String idEndereco;
 	
 	@Column(name = "crr_ultimo_adicionado")
 	private Date ultimoAdicionado;
