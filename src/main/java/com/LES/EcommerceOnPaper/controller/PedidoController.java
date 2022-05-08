@@ -16,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -25,10 +27,12 @@ import com.LES.EcommerceOnPaper.service.PedidoService;
 public class PedidoController {
 	
 	final PedidoService service;
+	final ItemService itemService;
 
-	public PedidoController(PedidoService service) {
+	public PedidoController(PedidoService service, ItemService itemService) {
 		super();
 		this.service = service;
+		this.itemService = itemService;
 	}
 	
 	@PostMapping("/pedido")
