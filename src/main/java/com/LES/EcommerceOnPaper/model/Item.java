@@ -29,14 +29,10 @@ public class Item {
 	@Column(name = "ite_nome_produto")
 	private String nomeProduto;
 	
-<<<<<<< HEAD
-	@Column(name = "ite_id_produto")
-=======
 	@Column(name = "ite_imageProduto")
 	private String imagemProduto;
 	
 	@Column(name = "ite_idProduto")
->>>>>>> c9fa61652254513446055b50596217ea6cd231a1
 	private long idProduto;
 	
 	public Item() {}

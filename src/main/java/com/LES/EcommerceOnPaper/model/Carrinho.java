@@ -27,14 +27,10 @@ public class Carrinho {
 	private String endereco;
 	
 	@Column(name = "crr_id_endereco")
-<<<<<<< HEAD
-	private String idEndereco;
-=======
 	private long idEndereco;
 	
 	@Column(name = "crr_cep")
 	private String cep;
->>>>>>> c9fa61652254513446055b50596217ea6cd231a1
 	
 	@Column(name = "crr_ultimo_adicionado")
 	private Date ultimoAdicionado;

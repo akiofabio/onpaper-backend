@@ -123,15 +123,11 @@ public class CarrinhoController {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
 		}
 		Produto produto = produtoOptional.get();
-<<<<<<< HEAD
 		produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada() +request.getQuantidade());
 		produtoService.save(produto);
 		request.setIdProduto(produto.getId());
 		request.setNomeProduto(produto.getNome());
-=======
-		produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() + request.getQuantidade());
-		produtoService.save(produto);
->>>>>>> c9fa61652254513446055b50596217ea6cd231a1
+
 		request.setStatus("DISONIVEL");
 		Carrinho model = optional.get();
 		model.getItens().add(request);

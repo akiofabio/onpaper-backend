@@ -29,13 +29,8 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	
-<<<<<<< HEAD
-	@Column(name = "ped_id=endereco")
-	private String idEndereco;
-=======
 	@Column(name = "ped_id_endereco")
 	private long idEndereco;
->>>>>>> c9fa61652254513446055b50596217ea6cd231a1
 	
 	@Column(name = "ped_endereco")
 	private String endereco;
@@ -48,11 +43,7 @@ public class Pedido {
 	
 	public Pedido() {}
 
-<<<<<<< HEAD
-	public Pedido(StatusPedido status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, String idEndereco,
-=======
 	public Pedido(Set<StatusPedido> pedidoStatus, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, long idEndereco,
->>>>>>> c9fa61652254513446055b50596217ea6cd231a1
 			String endereco, String cep, float frete) {
 		super();
 		this.pedidoStatus = pedidoStatus;
@@ -126,15 +117,5 @@ public class Pedido {
 
 	public void setFrete(float frete) {
 		this.frete = frete;
-	}
-
-	public String getIdEndereco() {
-		return idEndereco;
-	}
-
-	public void setIdEndereco(String idEndereco) {
-		this.idEndereco = idEndereco;
-	}
-	
-	
+	}	
 }
