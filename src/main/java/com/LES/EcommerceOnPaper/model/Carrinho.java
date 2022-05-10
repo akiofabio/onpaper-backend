@@ -9,12 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
 import javax.persistence.Table;
-
 
 
 @Entity
@@ -26,9 +23,14 @@ public class Carrinho {
 	@Column(name = "crr_id")
 	private long id;
 	
-	@OneToOne(cascade = CascadeType.MERGE)
-	@JoinColumn(name = "crr_end_id")
-	private Endereco endereco;
+	@Column(name = "crr_endereco")
+	private String endereco;
+	
+	@Column(name = "crr_id_endereco")
+	private long idEndereco;
+	
+	@Column(name = "crr_cep")
+	private String cep;
 	
 	@Column(name = "crr_ultimo_adicionado")
 	private Date ultimoAdicionado;
@@ -38,10 +40,12 @@ public class Carrinho {
 	private Set<Item> itens;
 	
 	public Carrinho() {}
-	
-	public Carrinho(Endereco endereco, Date ultimoAdicionado, Set<Item> itens) {
+
+	public Carrinho(String endereco, long idEndereco, String cep, Date ultimoAdicionado, Set<Item> itens) {
 		super();
 		this.endereco = endereco;
+		this.idEndereco = idEndereco;
+		this.cep = cep;
 		this.ultimoAdicionado = ultimoAdicionado;
 		this.itens = itens;
 	}
@@ -54,12 +58,28 @@ public class Carrinho {
 		this.id = id;
 	}
 
-	public Endereco getEndereco() {
+	public String getEndereco() {
 		return endereco;
 	}
 
-	public void setEndereco(Endereco endereco) {
+	public void setEndereco(String endereco) {
 		this.endereco = endereco;
+	}
+
+	public long getIdEndereco() {
+		return idEndereco;
+	}
+
+	public void setIdEndereco(long idEndereco) {
+		this.idEndereco = idEndereco;
+	}
+
+	public String getCep() {
+		return cep;
+	}
+
+	public void setCep(String cep) {
+		this.cep = cep;
 	}
 
 	public Date getUltimoAdicionado() {

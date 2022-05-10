@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -45,18 +46,18 @@ public class CarrinhoController {
 		}
 		Carrinho model = optional.get();
 		
-		
 		for( Item item: request.getItens() ) {
 			for( Item itemAnt: model.getItens() ) {
 				if( item.getId() == itemAnt.getId() ) {
-					Produto produto = itemAnt.getProduto();
+					Produto produto = produtoService.findById(item.getIdProduto()).get();
 				    int qtdDesbloqueio = itemAnt.getQuantidade() - item.getQuantidade();
 				    int qtdDisponivel = produto.getQuantidade() - produto.getQuantidadeBloqueada();
 
 				    if( itemAnt.getQuantidade() > item.getQuantidade() ){
-				        produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() - qtdDesbloqueio);
-				        item.setProduto( produto );
+				        produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() - qtdDesbloqueio );
+				        produtoService.save(produto);
 				        item.setStatus( "DISPONIVEL" );
+				        request.setUltimoAdicionado(new Date());
 				    }
 				    else if( itemAnt.getQuantidade() < item.getQuantidade() ) {
 				        
@@ -69,7 +70,7 @@ public class CarrinhoController {
 				        }
 				        else{
 				             produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() + ( item.getQuantidade() - itemAnt.getQuantidade() ) );
-				             item.setProduto( produto );
+				             produtoService.save(produto);
 				             item.setStatus( "DISPONIVEL" );
 				        }
 				    }
@@ -77,7 +78,9 @@ public class CarrinhoController {
 				}
 			}
 		}
+		model.setIdEndereco( request.getIdEndereco() );
 		model.setEndereco( request.getEndereco() );
+		model.setCep( request.getCep() );
 		model.setItens( request.getItens() );
 		model.setUltimoAdicionado( request.getUltimoAdicionado() );
 		return ResponseEntity.status( HttpStatus.OK ).body(service.save(model) );
@@ -115,13 +118,13 @@ public class CarrinhoController {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Carrinho não Encontrado");
 		}
 		
-		Optional<Produto> produtoOptional = produtoService.findById(request.getProduto().getId());
+		Optional<Produto> produtoOptional = produtoService.findById(request.getIdProduto());
 		if(!produtoOptional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
 		}
 		Produto produto = produtoOptional.get();
-		produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada() +request.getQuantidade());
-		request.setProduto(produto);
+		produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() + request.getQuantidade());
+		produtoService.save(produto);
 		request.setStatus("DISONIVEL");
 		Carrinho model = optional.get();
 		model.getItens().add(request);
@@ -138,13 +141,13 @@ public class CarrinhoController {
 		Carrinho model = optional.get();
 		for(Item item : model.getItens()) {
 			if(item.getId() == request.getId()) {
-				item.getProduto().setQuantidadeBloqueada(item.getProduto().getQuantidadeBloqueada() - item.getQuantidade());
-				produtoService.save(item.getProduto());
+				Produto produto = produtoService.findById(item.getIdProduto()).get();
+				produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada() - item.getQuantidade());
+				produtoService.save(produto);
 				model.getItens().remove(item);
 				break;
 			}
 		}
-		
 		model.getItens().remove(request);
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}

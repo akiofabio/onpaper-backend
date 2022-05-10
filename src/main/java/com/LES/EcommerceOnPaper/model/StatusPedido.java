@@ -12,7 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "pedidosStatus")
+@Table(name = "status_pedidos")
 public class StatusPedido {
 	
 	@Id

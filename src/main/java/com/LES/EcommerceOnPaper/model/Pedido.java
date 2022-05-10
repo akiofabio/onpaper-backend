@@ -1,6 +1,5 @@
 package com.LES.EcommerceOnPaper.model;
 
-import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -10,7 +9,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -22,8 +20,8 @@ public class Pedido {
 	@Column(name = "ped_id")
 	private long id;
 	
-	@Column(name = "ped_status")
-	private StatusPedido status;
+	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	private Set<StatusPedido> pedidoStatus;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<Item> itens;
@@ -31,10 +29,13 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	
+	@Column(name = "ped_id_endereco")
+	private long idEndereco;
+	
 	@Column(name = "ped_endereco")
 	private String endereco;
 	
-	@Column(name = "ped_endereco")
+	@Column(name = "ped_cep")
 	private String cep;
 	
 	@Column(name = "ped_frete")
@@ -42,12 +43,13 @@ public class Pedido {
 	
 	public Pedido() {}
 
-	public Pedido(StatusPedido status, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, String endereco,
-			String cep, float frete) {
+	public Pedido(Set<StatusPedido> pedidoStatus, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, long idEndereco,
+			String endereco, String cep, float frete) {
 		super();
-		this.status = status;
+		this.pedidoStatus = pedidoStatus;
 		this.itens = itens;
 		this.meioDePagamentos = meioDePagamentos;
+		this.idEndereco = idEndereco;
 		this.endereco = endereco;
 		this.cep = cep;
 		this.frete = frete;
@@ -61,12 +63,12 @@ public class Pedido {
 		this.id = id;
 	}
 
-	public StatusPedido getStatus() {
-		return status;
+	public Set<StatusPedido> getStatus() {
+		return pedidoStatus;
 	}
 
-	public void setStatus(StatusPedido status) {
-		this.status = status;
+	public void setStatus(Set<StatusPedido> status) {
+		this.pedidoStatus = status;
 	}
 
 	public Set<Item> getItens() {
@@ -83,6 +85,14 @@ public class Pedido {
 
 	public void setMeioDePagamentos(Set<MeioDePagamento> meioDePagamentos) {
 		this.meioDePagamentos = meioDePagamentos;
+	}
+
+	public long getIdEndereco() {
+		return idEndereco;
+	}
+
+	public void setIdEndereco(long idEndereco) {
+		this.idEndereco = idEndereco;
 	}
 
 	public String getEndereco() {
