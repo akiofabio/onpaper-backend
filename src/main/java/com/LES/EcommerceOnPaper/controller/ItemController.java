@@ -45,7 +45,8 @@ public class ItemController {
 		}
 		Item model = optional.get();
 		model.setStatus(request.getStatus());
-		model.setProduto(request.getProduto());
+		model.setNomeProduto(request.getNomeProduto());
+		model.setIdProduto(request.getIdProduto());
 		model.setQuantidade(request.getQuantidade());
 		model.setPreco(request.getPreco());
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));

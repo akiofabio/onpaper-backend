@@ -29,20 +29,28 @@ public class Item {
 	@Column(name = "ite_nome_produto")
 	private String nomeProduto;
 	
+<<<<<<< HEAD
 	@Column(name = "ite_id_produto")
+=======
+	@Column(name = "ite_imageProduto")
+	private String imagemProduto;
+	
+	@Column(name = "ite_idProduto")
+>>>>>>> c9fa61652254513446055b50596217ea6cd231a1
 	private long idProduto;
 	
 	public Item() {}
-	
-	public Item(String status, int quantidade, double preco, String nomeProduto, long idProduto) {
+
+	public Item(String status, int quantidade, double preco, String nomeProduto, String imagemProduto, long idProduto) {
 		super();
 		this.status = status;
 		this.quantidade = quantidade;
 		this.preco = preco;
 		this.nomeProduto = nomeProduto;
+		this.imagemProduto = imagemProduto;
 		this.idProduto = idProduto;
 	}
-	
+
 	public long getId() {
 		return id;
 	}
@@ -81,6 +89,14 @@ public class Item {
 
 	public void setNomeProduto(String nomeProduto) {
 		this.nomeProduto = nomeProduto;
+	}
+
+	public String getImagemProduto() {
+		return imagemProduto;
+	}
+
+	public void setImagemProduto(String imagemProduto) {
+		this.imagemProduto = imagemProduto;
 	}
 
 	public long getIdProduto() {

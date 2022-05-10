@@ -1,8 +1,13 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +21,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LES.EcommerceOnPaper.model.Cupom;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.MeioDePagamento;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.model.StatusPedido;
 import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
@@ -40,16 +47,85 @@ public class PedidoController {
 	
 	@PostMapping("/pedido")
 	public ResponseEntity<Object> create(@RequestBody Pedido request) {
-//		for(Item item : request.getItens()) {
-//			if(item.getId()==0) {
-//				item.setId(itemService.save(item).getId()) ;
-//			}
-//		}
-//		for(MeioDePagamento meio : request.getMeioDePagamentos()) {
-//			if(meio.getId()==0) {
-//				meio.setId(meioDePagamentoService.save(meio).getId()) ;
-//			}
-//		}
+		float total = 0;
+		float totalPago = 0;
+		ArrayList<MeioDePagamento> cartoes = new ArrayList<MeioDePagamento>() ;
+		ArrayList<MeioDePagamento> cuponsTroca = new ArrayList<MeioDePagamento>();
+		MeioDePagamento cupomPromocional = null;
+
+		for(Item item : request.getItens()) {
+		    total += item.getPreco() *item.getQuantidade();
+		} 
+
+		for( MeioDePagamento meio : request.getMeioDePagamentos() ){
+		    totalPago += meio.getValor();
+		    if(meio.getTipo().equals( "Cartão de Credito" ) ) {
+		        cartoes.add( meio );
+		    }
+		    else if ( meio.getTipo().equals( "Cupom de Troca" ) ) {
+		        cuponsTroca.add( meio );
+		    }
+		    else if ( meio.getTipo().equals( "Cupom Promocional" ) ) {
+		        if( cupomPromocional == null ) {
+		            cupomPromocional = meio;
+		        }
+		        else{
+		            return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Só é permitido um cupom promocional por compra" ) ;
+		        } 
+		    }
+		}
+		if( ( total + request.getFrete() ) > totalPago ) {
+		    return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Valor insuficiente" ) ;
+		}
+		else if( ( total + request.getFrete() ) < totalPago) {
+		    if( !cartoes.isEmpty() ) {
+		        return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Valor excedido! Não é possível gerar cupom de troca enquando utiliza um ou mais cartão de crédito" );
+		    }
+		    if( !cuponsTroca.isEmpty() ) { 
+		        ArrayList<MeioDePagamento> cupons = cuponsTroca;
+		        if( cupomPromocional != null ) {
+		            cupons.add(cupomPromocional);
+		        }
+		        Collections.sort( cuponsTroca , new Comparator<MeioDePagamento>(){ 
+		            public int compare(MeioDePagamento m1, MeioDePagamento m2){ 
+		                if(m1.getValor() == m2.getValor()) {
+		                    return 0;
+		                }
+		                return m1.getValor() < m2.getValor() ? -1 : 1; 
+		            }
+		        });
+		        float totalCupons = 0 ;
+		        for( MeioDePagamento cupom : cupons ) {
+		            if( totalCupons > total ) {
+		                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Não é possível usar cupons que excedem o total a pagar" );
+		            }
+		            totalCupons += cupom.getValor();
+		        }
+		    }
+		}
+		else if( ( total + request.getFrete() ) == totalPago ) {
+			if( ( cartoes.size() > 1 ) || ( ( cuponsTroca.isEmpty() ) && ( cupomPromocional == null ) ) ) {
+				for(MeioDePagamento cartao : cartoes) {
+					if(cartao.getValor()<10) {
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("O valor minimo de cada cartão de crédito é de R$10,00");
+					}
+				}
+			}
+		}
+		if(request.getStatus()==null || request.getStatus().size()==0) {
+		Set<StatusPedido> statusSet = new HashSet<StatusPedido>();
+		
+		StatusPedido statusConcluido= new StatusPedido();
+		statusConcluido.setData(new Date());
+		statusConcluido.setStatus("Concluido");
+		statusSet.add(statusConcluido);
+		
+		StatusPedido statusProc= new StatusPedido();
+		statusProc.setStatus("Em Processamento");		
+		statusSet.add(statusProc);
+		
+		request.setStatus(statusSet);
+		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	

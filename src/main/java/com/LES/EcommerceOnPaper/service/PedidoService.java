@@ -38,6 +38,6 @@ public class PedidoService {
 	}
 
 	public List<Pedido> findByDatas(Date dataInicio, Date dataFinal) {
-		return repository.findByDataGreaterThanAndDataLessThan(dataInicio,dataFinal);
+		return repository.findByPedidoStatusStatusAndPedidoStatusDataGreaterThanAndPedidoStatusDataLessThan("Concluido",dataInicio,dataFinal);
 	}
 }

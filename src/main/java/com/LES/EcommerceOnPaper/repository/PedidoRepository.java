@@ -11,6 +11,6 @@ import com.LES.EcommerceOnPaper.model.Pedido;
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido,Long> {
 
-	List<Pedido> findByDataGreaterThanAndDataLessThan(Date dataInicio, Date dataFinal);
+	List<Pedido> findByPedidoStatusStatusAndPedidoStatusDataGreaterThanAndPedidoStatusDataLessThan(String status,Date dataInicio, Date dataFinal);
 
 }
