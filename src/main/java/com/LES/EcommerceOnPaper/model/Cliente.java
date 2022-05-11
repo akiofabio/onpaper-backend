@@ -41,7 +41,7 @@ public class Cliente extends Usuario{
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cartao> cartoes;
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany
 	private Set<Pedido> pedidos;
 
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
