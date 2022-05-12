@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -68,11 +69,11 @@ public class Produto {
 	@Column(name = "pro_peso")
 	private double peso;
 	
-	@ManyToOne
+	@OneToOne
 	private Fabricante fabricante;
 	
-	@ManyToOne
-	private Categoria categoria;
+	@OneToMany
+	private Set<Categoria> categorias;
 	
 	@Column(name = "pro_destaque")
 	private boolean destaque;
