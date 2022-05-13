@@ -9,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -72,7 +73,7 @@ public class Produto {
 	@OneToOne
 	private Fabricante fabricante;
 	
-	@OneToMany
+	@ManyToMany
 	private Set<Categoria> categorias;
 	
 	@Column(name = "pro_destaque")
@@ -86,7 +87,7 @@ public class Produto {
 	public Produto(String status, String nome, String descricao, String codigoDeBarra,
 			GrupoDePrecificacao grupoDePrecificacao, double preco, double custo, int quantidade, String imagens,
 			Set<Inativacao> inativacoes, Set<Ativacao> ativacoes, double altura, double largura, double comprimento,
-			double peso, Fabricante fabricante, Categoria categoria, boolean destaque, int quantidadeBloqueada) {
+			double peso, Fabricante fabricante, Set<Categoria> categorias, boolean destaque, int quantidadeBloqueada) {
 		super();
 		this.status = status;
 		this.nome = nome;
@@ -104,10 +105,11 @@ public class Produto {
 		this.comprimento = comprimento;
 		this.peso = peso;
 		this.fabricante = fabricante;
-		this.categoria = categoria;
+		this.categorias = categorias;
 		this.destaque = destaque;
 		this.quantidadeBloqueada = quantidadeBloqueada;
 	}
+
 	public long getId() {
 		return id;
 	}
@@ -244,12 +246,12 @@ public class Produto {
 		this.fabricante = fabricante;
 	}
 
-	public Categoria getCategoria() {
-		return categoria;
+	public Set<Categoria> getCategorias() {
+		return categorias;
 	}
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
+	public void setCategorias(Set<Categoria> categorias) {
+		this.categorias = categorias;
 	}
 
 	public boolean isDestaque() {
@@ -259,7 +261,7 @@ public class Produto {
 	public void setDestaque(boolean destaque) {
 		this.destaque = destaque;
 	}
-	
+
 	public int getQuantidadeBloqueada() {
 		return quantidadeBloqueada;
 	}
@@ -267,4 +269,6 @@ public class Produto {
 	public void setQuantidadeBloqueada(int quantidadeBloqueada) {
 		this.quantidadeBloqueada = quantidadeBloqueada;
 	}
+
+	
 }
