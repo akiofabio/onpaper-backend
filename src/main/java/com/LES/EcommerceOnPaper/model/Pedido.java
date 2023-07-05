@@ -21,7 +21,7 @@ public class Pedido {
 	private long id;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-	private Set<StatusPedido> pedidoStatus;
+	private Set<StatusPedido> ｓtatus;
 	
 	@OneToMany(cascade = {CascadeType.MERGE})
 	private Set<Item> itens;
@@ -46,7 +46,7 @@ public class Pedido {
 	public Pedido(Set<StatusPedido> pedidoStatus, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, long idEndereco,
 			String endereco, String cep, float frete) {
 		super();
-		this.pedidoStatus = pedidoStatus;
+		this.ｓtatus = pedidoStatus;
 		this.itens = itens;
 		this.meioDePagamentos = meioDePagamentos;
 		this.idEndereco = idEndereco;
@@ -64,11 +64,11 @@ public class Pedido {
 	}
 
 	public Set<StatusPedido> getStatus() {
-		return pedidoStatus;
+		return ｓtatus;
 	}
 
 	public void setStatus(Set<StatusPedido> status) {
-		this.pedidoStatus = status;
+		this.ｓtatus = status;
 	}
 
 	public Set<Item> getItens() {

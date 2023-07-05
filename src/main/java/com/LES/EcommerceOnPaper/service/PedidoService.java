@@ -1,12 +1,18 @@
 package com.LES.EcommerceOnPaper.service;
 
+import java.text.MessageFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import javax.persistence.criteria.Predicate;
+
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.LES.EcommerceOnPaper.model.Cliente;
 import com.LES.EcommerceOnPaper.model.Pedido;
 import com.LES.EcommerceOnPaper.repository.PedidoRepository;
 
@@ -37,7 +43,53 @@ public class PedidoService {
 		return repository.findById(id);
 	}
 
-	public List<Pedido> findByDatas(Date dataInicio, Date dataFinal) {
-		return repository.findByPedidoStatusStatusAndPedidoStatusDataGreaterThanAndPedidoStatusDataLessThan("Concluido",dataInicio,dataFinal);
+	/*public List<Pedido> findByDatas(Date dataInicio, Date dataFinal) {
+		return repository.findByStatusStatusAndStatusDataGreaterThanAndStatusDataLessThan("Concluido",dataInicio,dataFinal);
+	}
+	*/
+	public List<Pedido> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
+		List<String> nomes = new ArrayList<String>();
+		List<String> cpfs =  new ArrayList<String>();
+		List<Date> datasNascimento =  new ArrayList<Date>();
+		
+		if(!pesquisas.isPresent()) {
+			return repository.findAll();
+		}
+		
+		for(String parametro : parametros.get()) {
+			if(parametro.equals("nome")) {
+				System.out.println(pesquisas.get().get(parametros.get().indexOf(parametro)));
+				if(!pesquisas.get().get(parametros.get().indexOf(parametro)).isBlank())
+					nomes.add(pesquisas.get().get(parametros.get().indexOf(parametro)));
+			}
+			if(parametro.equals("cpf")) {
+				cpfs.add(pesquisas.get().get(parametros.get().indexOf(parametro)));
+			}
+			if(parametro.equals("dataNacimento")) {
+				//datasNascimento.add(
+				//		pesquisas.get().get(parametros.get().indexOf(parametro)));
+			}
+		}
+		if(nomes.isEmpty()) {
+			return repository.findAll();
+		}
+		
+		Specification<Pedido> specification = Specification
+				.where(nomes.isEmpty() ? null : parametroIn( nomes, "nome" ))
+			    .and(cpfs.isEmpty() ? null : parametroIn( cpfs , "cpf"))
+			    //.and(datasNascimento.isEmpty() ? null : dataNascimentoIn((String[]) cpfs.toArray())
+		;
+		
+		return repository.findAll();
+	}
+	
+	private static String contains(String expression) {
+	    return MessageFormat.format("%{0}%", expression);
+	}
+	
+	public static Specification<Pedido> parametroIn(List<String> values , String parametro) {
+	    return (root, query, builder) -> builder.or(values.stream()
+	        .map(value -> builder.like(root.get(parametro), contains(value)))
+	        .toArray(Predicate[]::new));
 	}
 }

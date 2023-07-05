@@ -115,13 +115,9 @@ public class PedidoController {
 		if(request.getStatus()==null || request.getStatus().size()==0) {
 		Set<StatusPedido> statusSet = new HashSet<StatusPedido>();
 		
-		StatusPedido statusConcluido= new StatusPedido();
-		statusConcluido.setData(new Date());
-		statusConcluido.setStatus("Concluido");
-		statusSet.add(statusConcluido);
-		
 		StatusPedido statusProc= new StatusPedido();
-		statusProc.setStatus("Em Processamento");		
+		statusProc.setStatus("Em Processamento");
+		statusProc.setData(new Date());
 		statusSet.add(statusProc);
 		
 		request.setStatus(statusSet);
@@ -131,6 +127,17 @@ public class PedidoController {
 	
 	@PutMapping("/pedido/{id}")
 	public ResponseEntity<Pedido> update(@PathVariable Long id,@RequestBody Pedido request) {
+		Optional<Pedido> optional = service.findById(id);
+		if(!optional.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
+		}
+		Pedido model = optional.get();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+	}
+	
+	@PutMapping("/pedido/{acao}/{id}")
+	public ResponseEntity<Pedido> update(@PathVariable String acao,@PathVariable Long id,@RequestBody Pedido request) {
 		Optional<Pedido> optional = service.findById(id);
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
@@ -164,8 +171,9 @@ public class PedidoController {
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
 	
-	@GetMapping("/pedido/datas/dataInicio={dataInicio}&dataFinal={dataFinal}")
+	/*@GetMapping("/pedido/datas/dataInicio={dataInicio}&dataFinal={dataFinal}")
 	public ResponseEntity<List<Pedido>> getByDatas(@PathVariable Date dataInicio, @PathVariable Date dataFinal) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByDatas(dataInicio,dataFinal));
 	}
+	*/
 }

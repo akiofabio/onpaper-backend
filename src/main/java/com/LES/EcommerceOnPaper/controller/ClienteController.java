@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LES.EcommerceOnPaper.model.Cliente;
@@ -83,4 +85,28 @@ public class ClienteController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
+	@GetMapping("/cliente/pesquisa")
+	public ResponseEntity<List<Cliente>> getByParametros(@RequestParam(name = "pes") Optional<List<String>> pesquisas, @RequestParam(name = "par") Optional<List<String>> parametros) {
+		/*Optional<List<String>> nomes= Optional.empty();
+		Optional<List<String>> cpfs = Optional.empty();
+		Optional<List<Date>> dataNascimento = Optional.empty();
+		System.out.println(pesquisas.get().get(0));
+		for(String parametro : parametros.get()) {
+			if(parametro.equals("nome")) {
+				if(nomes.isEmpty()) {
+					nomes = pesquisas.get().get(parametros.get().indexOf(parametro));
+				}
+				else {
+					nomes += " OR " + pesquisas.get().get(parametros.get().indexOf(parametro));
+				}
+			}
+		}
+		//System.out.println(nomes);
+		Optional<String> opNomes = Optional.ofNullable(nomes).filter(s -> !s.isEmpty());
+		//System.out.println(opNomes.get());
+		//System.out.println(cpfs.get());
+		 */
+		return ResponseEntity.status(HttpStatus.OK).body(service.findByParametros(pesquisas, parametros));
+	}
+	
 }
