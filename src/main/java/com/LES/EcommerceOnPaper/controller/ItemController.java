@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LES.EcommerceOnPaper.model.DadosGrafico;
 import com.LES.EcommerceOnPaper.model.Item;
+import com.LES.EcommerceOnPaper.model.Pedido;
 import com.LES.EcommerceOnPaper.service.ItemService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -74,5 +77,10 @@ public class ItemController {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item não Encontrado");
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
+	}
+	
+	@GetMapping("/item/dados/dataInicio={dataInicio}&dataFinal={dataFinal}&tipo={tipo}&escala={escala}")
+	public ResponseEntity<DadosGrafico> getByDados(@PathVariable Date dataInicio, @PathVariable Date dataFinal, @PathVariable String tipo, @PathVariable String escala) {
+		return ResponseEntity.status(HttpStatus.OK).body(service.findDados(dataInicio,dataFinal,tipo,escala));
 	}
 }

@@ -1,7 +1,13 @@
 package com.LES.EcommerceOnPaper.service;
 
 import java.text.MessageFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -12,8 +18,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.LES.EcommerceOnPaper.model.Categoria;
 import com.LES.EcommerceOnPaper.model.Cliente;
+import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.model.StatusPedido;
+import com.LES.EcommerceOnPaper.repository.CategoriaRepository;
 import com.LES.EcommerceOnPaper.repository.PedidoRepository;
 
 @Service
@@ -43,10 +53,7 @@ public class PedidoService {
 		return repository.findById(id);
 	}
 
-	/*public List<Pedido> findByDatas(Date dataInicio, Date dataFinal) {
-		return repository.findByStatusStatusAndStatusDataGreaterThanAndStatusDataLessThan("Concluido",dataInicio,dataFinal);
-	}
-	*/
+	
 	public List<Pedido> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
 		List<String> nomes = new ArrayList<String>();
 		List<String> cpfs =  new ArrayList<String>();

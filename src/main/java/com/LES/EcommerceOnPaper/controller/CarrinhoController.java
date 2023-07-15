@@ -56,12 +56,12 @@ public class CarrinhoController {
 				    if( itemAnt.getQuantidade() > item.getQuantidade() ){
 				        produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() - qtdDesbloqueio );
 				        produtoService.save(produto);
-				        item.setStatus( "DISPONIVEL" );
+				        item.setDisponibilidade("DISPONIVEL");
 				        request.setUltimoAdicionado(new Date());
 				    }
 				    else if( itemAnt.getQuantidade() < item.getQuantidade() ) {
 				        
-				        if( item.getStatus().equals( "DISPONIVEL" ) ) {
+				        if( item.getDisponibilidade().equals( "DISPONIVEL" ) ) {
 				            qtdDisponivel += itemAnt.getQuantidade();
 				        }
 				        
@@ -71,7 +71,7 @@ public class CarrinhoController {
 				        else{
 				             produto.setQuantidadeBloqueada( produto.getQuantidadeBloqueada() + ( item.getQuantidade() - itemAnt.getQuantidade() ) );
 				             produtoService.save(produto);
-				             item.setStatus( "DISPONIVEL" );
+				             item.setDisponibilidade( "DISPONIVEL" );
 				        }
 				    }
 				    break;
@@ -128,7 +128,7 @@ public class CarrinhoController {
 		request.setIdProduto(produto.getId());
 		request.setNomeProduto(produto.getNome());
 
-		request.setStatus("DISONIVEL");
+		request.setDisponibilidade("DISONIVEL");
 		Carrinho model = optional.get();
 		model.getItens().add(request);
 		

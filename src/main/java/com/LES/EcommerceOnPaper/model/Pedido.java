@@ -23,7 +23,7 @@ public class Pedido {
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<StatusPedido> ｓtatus;
 	
-	@OneToMany(cascade = {CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Item> itens;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

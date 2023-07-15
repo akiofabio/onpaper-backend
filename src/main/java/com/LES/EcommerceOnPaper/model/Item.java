@@ -1,11 +1,14 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -18,7 +21,8 @@ public class Item {
 	private long id;
 	
 	@Column(name = "ite_status")
-	private String status;
+	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	private Set<StatusItem> status;
 	
 	@Column(name = "ite_quantidade")
 	private int quantidade;
@@ -29,15 +33,18 @@ public class Item {
 	@Column(name = "ite_nome_produto")
 	private String nomeProduto;
 	
-	@Column(name = "ite_imageProduto")
+	@Column(name = "ite_image_produto")
 	private String imagemProduto;
 	
-	@Column(name = "ite_idProduto")
+	@Column(name = "ite_id_produto")
 	private long idProduto;
+	
+	@Column(name = "ite_disponibilidade")
+	private String disponibilidade;
 	
 	public Item() {}
 
-	public Item(String status, int quantidade, double preco, String nomeProduto, String imagemProduto, long idProduto) {
+	public Item(Set<StatusItem> status, int quantidade, double preco, String nomeProduto, String imagemProduto, long idProduto) {
 		super();
 		this.status = status;
 		this.quantidade = quantidade;
@@ -55,11 +62,11 @@ public class Item {
 		this.id = id;
 	}
 
-	public String getStatus() {
+	public Set<StatusItem> getStatus() {
 		return status;
 	}
 
-	public void setStatus(String status) {
+	public void setStatus(Set<StatusItem> status) {
 		this.status = status;
 	}
 
@@ -102,4 +109,13 @@ public class Item {
 	public void setIdProduto(long idProduto) {
 		this.idProduto = idProduto;
 	}
+
+	public String getDisponibilidade() {
+		return disponibilidade;
+	}
+
+	public void setDisponibilidade(String disponibilidade) {
+		this.disponibilidade = disponibilidade;
+	}
+	
 }
