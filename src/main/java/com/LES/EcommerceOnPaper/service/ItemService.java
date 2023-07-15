@@ -59,7 +59,6 @@ public class ItemService {
 		SimpleDateFormat  formatoData = new SimpleDateFormat("ddMMyyyy");
 		
 		Calendar data =  Calendar.getInstance();
-		
 		ArrayList<Calendar> datas = new ArrayList<Calendar>();
 		ArrayList<String> labelDatas = new ArrayList<String>();
 		ArrayList<String> labelCategorias = new ArrayList<String>();
@@ -78,7 +77,7 @@ public class ItemService {
 		if(escala.equals("DIA")) {
 			escalaCalendar= Calendar.DAY_OF_MONTH;
 			formatoData = new SimpleDateFormat("dd/MM/yyyy");
-			labelDatas.add(formatoData.format(data.getTime()));
+			labelDatas.add(formatoData.format(data.getTime() ));
 			data.add(escalaCalendar, 1);
 			for(List<Double> dado : dados) {
 				dado.add(0d);
@@ -127,8 +126,6 @@ public class ItemService {
 		for(Calendar dt : datas) {
 			System.out.println(dt.getTime());
 		}
-		System.out.println(dados);
-		
 		if(itens!=null && !itens.isEmpty()) {
 			for(Item item: itens) {
 				for(StatusItem status : item.getStatus()) {
@@ -155,11 +152,10 @@ public class ItemService {
 				}
 			}
 		}
-		System.out.println(dados);
 		DadosGrafico dadosGraficos = new DadosGrafico();
 		dadosGraficos.setCategoriaLabel(labelCategorias);
 		dadosGraficos.setDataLebel(labelDatas);
 		dadosGraficos.setDados(dados);
-		return dadosGraficos;	
+		return dadosGraficos;
 	}
 }
