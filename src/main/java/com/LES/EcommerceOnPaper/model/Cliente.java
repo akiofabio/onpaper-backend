@@ -1,6 +1,8 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -14,6 +16,7 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name="cli_id")
 public class Cliente extends Usuario{
 	
+	
 	@Column(name = "cli_status")
 	private String status;
 	
@@ -21,7 +24,7 @@ public class Cliente extends Usuario{
 	private String nome;
 	
 	@Column(name = "cli_cpf")
-	private String cpf;
+	private int cpf;
 
 	@Column(name = "cli_genero")
 	private String genero;
@@ -52,7 +55,7 @@ public class Cliente extends Usuario{
 
 	public Cliente() {}
 	
-	public Cliente(String email, String senha, String tipo, String status, String nome, String cpf, String genero, Date dataNascimento, String score,
+	public Cliente(String email, String senha, String tipo, String status, String nome, int cpf, String genero, Date dataNascimento, String score,
 			Set<Telefone> telefones, Set<Endereco> enderecos, Set<Cartao> cartoes, Set<Pedido> pedidos, Set<Cupom> cupons, Carrinho carrinho) {
 		super(email, senha, tipo);
 		this.status = status;
@@ -85,11 +88,11 @@ public class Cliente extends Usuario{
 		this.nome = nome;
 	}
 
-	public String getCpf() {
+	public int getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(String cpf) {
+	public void setCpf(int cpf) {
 		this.cpf = cpf;
 	}
 
@@ -163,5 +166,30 @@ public class Cliente extends Usuario{
 
 	public void setCarrinho(Carrinho carrinho) {
 		this.carrinho = carrinho;
+	}
+	
+	
+	public String validarDadosObrigatorios() {
+		List<String> msg = new ArrayList<String>();
+		if(nome.isEmpty()) {
+			msg.add("O nome é Obrigatorio");
+		}
+		if(genero.isEmpty()) {
+			msg.add("O genero é Obrigatorio");
+		}
+		
+		if(cpf<1) {
+			msg.add("O CPF é Obrigatorio");
+		}		
+		if(msg.isEmpty()) {
+			return "true";	
+		}
+		else {
+			return msg.toString();
+		}
+		
+	}
+	public Boolean validarCPF(int cpf) {
+		return true;
 	}
 }
