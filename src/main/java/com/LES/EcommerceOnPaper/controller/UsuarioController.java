@@ -76,7 +76,6 @@ public class UsuarioController {
 	
 	@GetMapping("/usuario/login/email={email}&senha={senha}")
 	public ResponseEntity<Object> getLogin( @PathVariable String email , @PathVariable String senha ) {
-		
 		Optional<Usuario> optional = service.findByEmail( email );
 		if(!optional.isPresent()) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuario não Encontrada");
