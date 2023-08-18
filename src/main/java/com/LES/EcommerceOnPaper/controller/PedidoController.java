@@ -122,7 +122,7 @@ public class PedidoController {
 			statusProc.setStatus("Em Processamento");
 			statusProc.setData(new Date());
 			statusSet.add(statusProc);
-						
+			request.setStatus(statusSet);
 			for(Item item : request.getItens()) {
 				item.getStatus().add(new StatusItem("Em Processamento",statusProc.getData()));
 			}
