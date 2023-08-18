@@ -15,6 +15,8 @@ import java.util.Optional;
 import javax.persistence.criteria.Predicate;
 
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,14 +56,17 @@ public class PedidoService {
 	}
 
 	
-	public List<Pedido> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
+	public ResponseEntity<List<Pedido>> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
 		List<String> nomes = new ArrayList<String>();
 		List<String> cpfs =  new ArrayList<String>();
-		List<Date> datasNascimento =  new ArrayList<Date>();
 		
-		if(!pesquisas.isPresent()) {
-			return repository.findAll();
+		return  ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+		
+		/*if(!pesquisas.isPresent()) {
+			return  ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
 		}
+		
+		//Specification<Pedido> specification = Specification.where(parametroIn( pesquisas.get()),parametros.get());
 		
 		for(String parametro : parametros.get()) {
 			if(parametro.equals("nome")) {
@@ -77,17 +82,11 @@ public class PedidoService {
 				//		pesquisas.get().get(parametros.get().indexOf(parametro)));
 			}
 		}
-		if(nomes.isEmpty()) {
-			return repository.findAll();
-		}
 		
-		Specification<Pedido> specification = Specification
-				.where(nomes.isEmpty() ? null : parametroIn( nomes, "nome" ))
-			    .and(cpfs.isEmpty() ? null : parametroIn( cpfs , "cpf"))
-			    //.and(datasNascimento.isEmpty() ? null : dataNascimentoIn((String[]) cpfs.toArray())
-		;
 		
-		return repository.findAll();
+		
+		return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+		*/
 	}
 	
 	private static String contains(String expression) {
@@ -99,4 +98,6 @@ public class PedidoService {
 	        .map(value -> builder.like(root.get(parametro), contains(value)))
 	        .toArray(Predicate[]::new));
 	}
+
+	
 }

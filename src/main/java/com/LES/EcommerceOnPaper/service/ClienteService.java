@@ -28,8 +28,6 @@ public class ClienteService {
 	@Transactional
 	public Cliente save(Cliente model) {
 		
-		
-		
 		return repository.save(model);
 	}
 	

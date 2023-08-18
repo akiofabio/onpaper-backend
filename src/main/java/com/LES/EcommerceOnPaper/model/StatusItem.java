@@ -25,6 +25,11 @@ public class StatusItem {
 	@Column(name = "sti_data")
 	private Date data;
 
+	public StatusItem(String status, Date data) {
+		this.status = status;
+		this.data = data;
+	}
+
 	public long getId() {
 		return id;
 	}

@@ -24,7 +24,7 @@ public class Cliente extends Usuario{
 	private String nome;
 	
 	@Column(name = "cli_cpf")
-	private int cpf;
+	private long cpf;
 
 	@Column(name = "cli_genero")
 	private String genero;
@@ -55,7 +55,7 @@ public class Cliente extends Usuario{
 
 	public Cliente() {}
 	
-	public Cliente(String email, String senha, String tipo, String status, String nome, int cpf, String genero, Date dataNascimento, String score,
+	public Cliente(String email, String senha, String tipo, String status, String nome, long cpf, String genero, Date dataNascimento, String score,
 			Set<Telefone> telefones, Set<Endereco> enderecos, Set<Cartao> cartoes, Set<Pedido> pedidos, Set<Cupom> cupons, Carrinho carrinho) {
 		super(email, senha, tipo);
 		this.status = status;
@@ -88,11 +88,11 @@ public class Cliente extends Usuario{
 		this.nome = nome;
 	}
 
-	public int getCpf() {
+	public long getCpf() {
 		return cpf;
 	}
 
-	public void setCpf(int cpf) {
+	public void setCpf(long cpf) {
 		this.cpf = cpf;
 	}
 
@@ -189,7 +189,7 @@ public class Cliente extends Usuario{
 		}
 		
 	}
-	public Boolean validarCPF(int cpf) {
+	public Boolean validarCPF(long cpf) {
 		return true;
 	}
 }

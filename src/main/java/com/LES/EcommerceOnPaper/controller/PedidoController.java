@@ -19,12 +19,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LES.EcommerceOnPaper.model.Cupom;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.MeioDePagamento;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.model.Produto;
+import com.LES.EcommerceOnPaper.model.StatusItem;
 import com.LES.EcommerceOnPaper.model.StatusPedido;
 import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
@@ -113,14 +116,16 @@ public class PedidoController {
 			}
 		}
 		if(request.getStatus()==null || request.getStatus().size()==0) {
-		Set<StatusPedido> statusSet = new HashSet<StatusPedido>();
-		
-		StatusPedido statusProc= new StatusPedido();
-		statusProc.setStatus("Em Processamento");
-		statusProc.setData(new Date());
-		statusSet.add(statusProc);
-		
-		request.setStatus(statusSet);
+			Set<StatusPedido> statusSet = new HashSet<StatusPedido>();
+			
+			StatusPedido statusProc= new StatusPedido();
+			statusProc.setStatus("Em Processamento");
+			statusProc.setData(new Date());
+			statusSet.add(statusProc);
+						
+			for(Item item : request.getItens()) {
+				item.getStatus().add(new StatusItem("Em Processamento",statusProc.getData()));
+			}
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
@@ -171,6 +176,12 @@ public class PedidoController {
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
 	
+	@GetMapping("/pedido/pesquisa")
+	public ResponseEntity<List<Pedido>> findByParametros(@RequestParam(name = "pes") Optional<List<String>> pesquisas, @RequestParam(name = "par") Optional<List<String>> parametros) {
+		return service.findByParametros(pesquisas, parametros);
+		
+	}
+
 	/*@GetMapping("/pedido/datas/dataInicio={dataInicio}&dataFinal={dataFinal}")
 	public ResponseEntity<List<Pedido>> getByDatas(@PathVariable Date dataInicio, @PathVariable Date dataFinal) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByDatas(dataInicio,dataFinal));
