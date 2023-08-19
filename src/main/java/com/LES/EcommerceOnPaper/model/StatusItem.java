@@ -26,6 +26,7 @@ public class StatusItem {
 	private Date data;
 
 	public StatusItem(String status, Date data) {
+		super();
 		this.status = status;
 		this.data = data;
 	}

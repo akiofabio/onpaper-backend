@@ -123,8 +123,18 @@ public class PedidoController {
 			statusProc.setData(new Date());
 			statusSet.add(statusProc);
 			request.setStatus(statusSet);
+			System.out.println("T1");
 			for(Item item : request.getItens()) {
-				item.getStatus().add(new StatusItem("Em Processamento",statusProc.getData()));
+				System.out.println("T2");
+				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
+				StatusItem st = new StatusItem("Em Processamento",statusProc.getData());
+				itemService.save(item);
+			}
+			for(Item item : request.getItens()) {
+				for( StatusItem st : item.getStatus()) {
+					System.out.println("T5 - " + st.getStatus());
+				}
+				
 			}
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));

@@ -21,7 +21,7 @@ public class Item {
 	private long id;
 	
 	@Column(name = "ite_status")
-	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.PERSIST})
 	private Set<StatusItem> status;
 	
 	@Column(name = "ite_quantidade")
