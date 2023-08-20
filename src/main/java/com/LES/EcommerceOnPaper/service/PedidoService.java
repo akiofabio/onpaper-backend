@@ -99,5 +99,9 @@ public class PedidoService {
 	        .toArray(Predicate[]::new));
 	}
 
+	public List<Pedido> findByPendentes() {
+		return repository.findByPendentes();
+	}
+
 	
 }

@@ -123,16 +123,13 @@ public class PedidoController {
 			statusProc.setData(new Date());
 			statusSet.add(statusProc);
 			request.setStatus(statusSet);
-			System.out.println("T1");
 			for(Item item : request.getItens()) {
-				System.out.println("T2");
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
 				StatusItem st = new StatusItem("Em Processamento",statusProc.getData());
 				itemService.save(item);
 			}
 			for(Item item : request.getItens()) {
 				for( StatusItem st : item.getStatus()) {
-					System.out.println("T5 - " + st.getStatus());
 				}
 				
 			}
@@ -152,13 +149,14 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/pedido/{acao}/{id}")
-	public ResponseEntity<Pedido> update(@PathVariable String acao,@PathVariable Long id,@RequestBody Pedido request) {
+	public ResponseEntity<Pedido> update(@PathVariable String acao,@PathVariable Long id) {
 		Optional<Pedido> optional = service.findById(id);
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
 		}
 		Pedido model = optional.get();
-		
+		StatusPedido st = new StatusPedido(acao,new Date());
+		model.getStatus().add(st);
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	
@@ -175,6 +173,11 @@ public class PedidoController {
 	@GetMapping("/pedido")
 	public ResponseEntity<List<Pedido>> getAll(){
 		return ResponseEntity.status(HttpStatus.OK).body(service.findAll());
+	}
+	
+	@GetMapping("/pedido/pendentes")
+	public ResponseEntity<List<Pedido>> getPedidosPendentes(){
+		return ResponseEntity.status(HttpStatus.OK).body(service.findByPendentes());
 	}
 	
 	@GetMapping("/pedido/{id}")

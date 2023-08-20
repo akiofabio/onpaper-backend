@@ -13,6 +13,13 @@ import com.LES.EcommerceOnPaper.model.Pedido;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecificationExecutor<Cliente> {
+	@Query( value="select DISTINCT * from onpaperdatabase.pedidos p "
+			+ "	join onpaperdatabase.pedidos_ｓtatus p_s on p.ped_id = p_s.pedido_ped_id"
+			+ " join onpaperdatabase.status_pedidos st on p_s.ｓtatus_stp_id = st.stp_id"
+			+ " where stp_status = 'Em Processamento' or stp_status = 'Em Troca' or "
+			+ "stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Devolução'", nativeQuery = true)
+	List<Pedido> findByPendentes();
+
 	@Query( value="select * from onpaperdatabase.pedidos p "
 			+ "	join onpaperdatabase.pedidos_ｓtatus p_s on p.ped_id = p_s.pedido_ped_id"
 			+ " join onpaperdatabase.status_pedidos st on p_s.ｓtatus_stp_id = st.stp_id"
