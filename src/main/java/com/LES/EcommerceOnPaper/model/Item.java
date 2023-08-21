@@ -21,7 +21,7 @@ public class Item {
 	private long id;
 	
 	@Column(name = "ite_status")
-	@OneToMany(cascade = {CascadeType.PERSIST})
+	@OneToMany(cascade = {CascadeType.ALL})
 	private Set<StatusItem> status;
 	
 	@Column(name = "ite_quantidade")
@@ -116,6 +116,19 @@ public class Item {
 
 	public void setDisponibilidade(String disponibilidade) {
 		this.disponibilidade = disponibilidade;
+	}
+
+	public StatusItem getUltimoStatus() {
+		StatusItem ultimoStatus = null;
+		if(status !=null && !status.isEmpty()) {
+			ultimoStatus = status.iterator().next();
+			for(StatusItem st : status) {
+				if(st.getData().after(ultimoStatus.getData())) {
+					ultimoStatus = st;
+				}
+			}
+		}
+		return ultimoStatus;
 	}
 	
 }

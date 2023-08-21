@@ -32,6 +32,7 @@ import com.LES.EcommerceOnPaper.model.StatusPedido;
 import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
+import com.LES.EcommerceOnPaper.service.StatusItemService;
 
 @CrossOrigin(origins= "http://localhost:3000")
 @RestController
@@ -41,11 +42,14 @@ public class PedidoController {
 	final PedidoService service;
 	final ItemService itemService;
 	final MeioDePagamentoService meioDePagamentoService;
-	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService) {
+	final StatusItemService statusItemService;
+	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService) {
 		super();
 		this.service = service;
 		this.itemService = itemService;
 		this.meioDePagamentoService = meioDePagamentoService;
+		this.statusItemService = statusItemService;
+		
 	}
 	
 	@PostMapping("/pedido")
@@ -126,12 +130,9 @@ public class PedidoController {
 			for(Item item : request.getItens()) {
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
 				StatusItem st = new StatusItem("Em Processamento",statusProc.getData());
+				stItemSet.add(st);
+				item.setStatus(stItemSet);
 				itemService.save(item);
-			}
-			for(Item item : request.getItens()) {
-				for( StatusItem st : item.getStatus()) {
-				}
-				
 			}
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
@@ -149,14 +150,27 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/pedido/{acao}/{id}")
-	public ResponseEntity<Pedido> update(@PathVariable String acao,@PathVariable Long id) {
+	public ResponseEntity<Object> update(@PathVariable String acao,@PathVariable Long id) {
 		Optional<Pedido> optional = service.findById(id);
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
 		}
 		Pedido model = optional.get();
 		StatusPedido st = new StatusPedido(acao,new Date());
+		for(Item item : model.getItens()) {
+			if(item.getUltimoStatus().getStatus().equals(model.getUltimoStatus().getStatus())) {
+				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
+				StatusItem stI = new StatusItem("Em Processamento",st.getData());
+				stItemSet.add(stI);
+				item.setStatus(stItemSet);
+				//itemService.save(item);
+			}
+			else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é permitido mudar estado do pedido intero com um item devolvido/trocado");
+			}
+		}
 		model.getStatus().add(st);
+		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	

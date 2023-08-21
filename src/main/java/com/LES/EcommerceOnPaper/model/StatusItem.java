@@ -30,7 +30,8 @@ public class StatusItem {
 		this.status = status;
 		this.data = data;
 	}
-
+	public StatusItem() {}
+	
 	public long getId() {
 		return id;
 	}
