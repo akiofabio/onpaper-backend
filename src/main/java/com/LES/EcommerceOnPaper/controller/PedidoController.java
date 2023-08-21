@@ -160,7 +160,7 @@ public class PedidoController {
 		for(Item item : model.getItens()) {
 			if(item.getUltimoStatus().getStatus().equals(model.getUltimoStatus().getStatus())) {
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
-				StatusItem stI = new StatusItem("Em Processamento",st.getData());
+				StatusItem stI = new StatusItem(acao,st.getData());
 				stItemSet.add(stI);
 				item.setStatus(stItemSet);
 				//itemService.save(item);
