@@ -2,11 +2,14 @@ package com.LES.EcommerceOnPaper.model;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -33,13 +36,13 @@ public class Cartao {
 	@Column(name = "car_preferencial")
 	private boolean preferencial;
 	
-	@Column(name = "car_bandeira")
-	private String bandeira;
+	@OneToOne(cascade = {CascadeType.ALL})
+	private Bandeira bandeira;
 	
 	public Cartao() {}
 	
 	public Cartao(String nome, String numero, String codigoSeguranca, Date validade, boolean preferencial,
-			String bandeira) {
+			Bandeira bandeira) {
 		super();
 		this.nome = nome;
 		this.numero = numero;
@@ -97,12 +100,35 @@ public class Cartao {
 		this.preferencial = preferencial;
 	}
 
-	public String getBandeira() {
+	public Bandeira getBandeira() {
 		return bandeira;
 	}
 
-	public void setBandeira(String bandeira) {
+	public void setBandeira(Bandeira bandeira) {
 		this.bandeira = bandeira;
+	}
+	
+	public String validarDadosObrigatorios() {
+		StringBuilder msg = new StringBuilder();
+		if(nome==null || nome.isEmpty()) {
+			msg.append("O Nome do Titular do Cartão de Credito é Obrigatorio; ");
+		}
+		if(numero==null || numero.isEmpty()) {
+			msg.append("O Numero do Cartão de Credito é Obrigatorio; ");
+		}
+		if(bandeira==null) {
+			msg.append("A Bandeira do Cartão de Credito é Obrigatorio; ");
+		}
+		if(validade==null || validade==null) {
+			msg.append("A Validade do Cartão de Credito é Obrigatorio; ");
+		}
+		if(codigoSeguranca==null || codigoSeguranca.isEmpty()) {
+			msg.append("O Código de Segurança do Cartão de Credito é Obrigatorio; ");
+		}
+		
+		
+		return msg.toString();
+		
 	}
 	
 }

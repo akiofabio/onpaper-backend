@@ -29,6 +29,7 @@ import com.LES.EcommerceOnPaper.model.Pedido;
 import com.LES.EcommerceOnPaper.model.Produto;
 import com.LES.EcommerceOnPaper.model.StatusItem;
 import com.LES.EcommerceOnPaper.model.StatusPedido;
+import com.LES.EcommerceOnPaper.service.ClienteService;
 import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
@@ -43,13 +44,14 @@ public class PedidoController {
 	final ItemService itemService;
 	final MeioDePagamentoService meioDePagamentoService;
 	final StatusItemService statusItemService;
-	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService) {
+	final ClienteService clienteService;
+	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService, ClienteService clienteService) {
 		super();
 		this.service = service;
 		this.itemService = itemService;
 		this.meioDePagamentoService = meioDePagamentoService;
 		this.statusItemService = statusItemService;
-		
+		this.clienteService = clienteService;
 	}
 	
 	@PostMapping("/pedido")
@@ -103,11 +105,12 @@ public class PedidoController {
 		        });
 		        float totalCupons = 0 ;
 		        for( MeioDePagamento cupom : cupons ) {
-		            if( totalCupons > total ) {
+		            if( totalCupons > (total + request.getFrete())) {
 		                return ResponseEntity.status( HttpStatus.BAD_REQUEST ).body( "Não é possível usar cupons que excedem o total a pagar" );
 		            }
 		            totalCupons += cupom.getValor();
 		        }
+		        
 		    }
 		}
 		else if( ( total + request.getFrete() ) == totalPago ) {
@@ -135,6 +138,12 @@ public class PedidoController {
 				itemService.save(item);
 			}
 		}
+		/*
+		for(MeioDePagamento cupom : cuponsTroca) {
+			
+		}
+		 */
+		
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	

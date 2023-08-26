@@ -1,5 +1,7 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.util.regex.Pattern;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -66,5 +68,34 @@ public class Usuario {
 
 	public void setTipo(String tipo) {
 		this.tipo = tipo;
+	}
+	
+	public String validarSenha() {
+		StringBuilder msg = new StringBuilder();
+		Pattern p;
+		if(senha.length()<8) {
+			msg.append("A Senha deve ter pelo menos 8 digitos");
+		}
+		
+		p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
+		if(!p.matcher(senha).find()) {
+			msg.append("A Senha deve conter pelo menos um caracters especial; ");
+		}
+		
+		p = Pattern.compile("[0-9]", Pattern.CASE_INSENSITIVE);
+		if(!p.matcher(senha).find()) {
+			msg.append("A Senha deve conter pelo menos um mumero; ");
+		}
+		
+		p = Pattern.compile("[a-z]");
+		if(!p.matcher(senha).find()) {
+			msg.append("A Senha deve conter pelo menos uma letra minuscula; ");
+		}
+		
+		p = Pattern.compile("[A-Z]");
+		if(!p.matcher(senha).find()) {
+			msg.append("A Senha deve conter pelo menos uma letra maiuscula; ");
+		}
+		return msg.toString();
 	}
 }

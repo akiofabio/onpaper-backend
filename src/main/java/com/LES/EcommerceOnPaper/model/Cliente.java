@@ -170,26 +170,33 @@ public class Cliente extends Usuario{
 	
 	
 	public String validarDadosObrigatorios() {
-		List<String> msg = new ArrayList<String>();
-		if(nome.isEmpty()) {
-			msg.add("O nome é Obrigatorio");
+		StringBuilder msg = new StringBuilder();
+		if(nome==null || nome.isEmpty()) {
+			msg.append("O nome é Obrigatorio; ");
 		}
-		if(genero.isEmpty()) {
-			msg.add("O genero é Obrigatorio");
+		if(genero==null || genero.isEmpty()) {
+			msg.append("O genero é Obrigatorio; ");
 		}
 		
 		if(cpf<1) {
-			msg.add("O CPF é Obrigatorio");
-		}		
-		if(msg.isEmpty()) {
-			return "true";	
+			msg.append("O CPF é Obrigatorio; ");
 		}
-		else {
-			return msg.toString();
+		if(dataNascimento==null) {
+			msg.append("A Data de Nascimento é Obrigatorio; ");
 		}
+		for(Endereco end : enderecos) {
+			msg.append(end.validarDadosObrigatorios());
+		}
+		for(Cartao cart : cartoes) {
+			msg.append(cart.validarDadosObrigatorios());
+		}
+		return msg.toString();
 		
 	}
 	public Boolean validarCPF(long cpf) {
+		
 		return true;
 	}
+
+	
 }

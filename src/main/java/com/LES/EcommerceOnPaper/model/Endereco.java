@@ -17,10 +17,13 @@ public class Endereco {
 	
 	@Column(name = "end_nome")
 	private String nome;
-
+	
 	@Column(name = "end_cep")
 	private String cep;
-
+	
+	@Column(name = "end_pais")
+	private String pais;
+	
 	@Column(name = "end_estado")
 	private String estado;
 
@@ -30,6 +33,9 @@ public class Endereco {
 	@Column(name = "end_bairro")
 	private String bairro;
 
+	@Column(name = "end_tipo")
+	private String tipo;
+	
 	@Column(name = "end_tipoLogradouro")
 	private String tipoLogradouro;
 
@@ -42,20 +48,31 @@ public class Endereco {
 	@Column(name = "end_observacao")
 	private String observacao;
 
+	@Column(name = "end_cobranca")
+	private Boolean cobranca;
+	
+	@Column(name = "end_entrega")
+	private Boolean entrega;
 	
 	public Endereco() {}
 	
-	public Endereco(String nome, String cep, String estado, String cidade, String bairro, String tipoLogradouro,
-			String logradouro, String numero, String observacao) {
+	public Endereco(String nome, String cep, String pais, String estado, String cidade, String bairro, String tipo,
+			String tipoLogradouro, String logradouro, String numero, String observacao, Boolean cobranca,
+			Boolean entrega) {
+		super();
 		this.nome = nome;
 		this.cep = cep;
+		this.pais = pais;
 		this.estado = estado;
 		this.cidade = cidade;
 		this.bairro = bairro;
+		this.tipo = tipo;
 		this.tipoLogradouro = tipoLogradouro;
 		this.logradouro = logradouro;
 		this.numero = numero;
 		this.observacao = observacao;
+		this.cobranca = cobranca;
+		this.entrega = entrega;
 	}
 
 	public long getId() {
@@ -137,4 +154,80 @@ public class Endereco {
 	public void setObservacao(String observacao) {
 		this.observacao = observacao;
 	}
+
+	public String getPais() {
+		return pais;
+	}
+
+	public void setPais(String pais) {
+		this.pais = pais;
+	}
+
+	public String getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(String tipo) {
+		this.tipo = tipo;
+	}
+
+	public Boolean getCobranca() {
+		return cobranca;
+	}
+
+	public void setCobranca(Boolean cobranca) {
+		this.cobranca = cobranca;
+	}
+
+	public Boolean getEntrega() {
+		return entrega;
+	}
+
+	public void setEntrega(Boolean entrega) {
+		this.entrega = entrega;
+	}
+	
+	public String validarDadosObrigatorios() {
+		StringBuilder msg = new StringBuilder();
+		if(nome==null || nome.isEmpty()) {
+			msg.append("O Nome do Ensdereco é Obrigatorio; ");
+		}
+		if(cep==null || cep.isEmpty()) {
+			msg.append("O CEP é Obrigatorio; ");
+		}
+		
+		if(pais==null || pais.isEmpty()) {
+			msg.append("O País é Obrigatorio; ");
+		}
+		
+		if(estado==null || estado.isEmpty()) {
+			msg.append("O Estado é Obrigatorio; ");
+		}
+		
+		if(cidade==null || cidade.isEmpty()) {
+			msg.append("A Cidade é Obrigatoria; ");
+		}
+		
+		if(bairro==null || bairro.isEmpty()) {
+			msg.append("O Bairro é Obrigatorio; ");
+		}
+		
+		if(tipo==null || tipo.isEmpty()) {
+			msg.append("O País é Obrigatorio; ");
+		}
+		
+		if(tipoLogradouro==null || tipoLogradouro.isEmpty()) {
+			msg.append("O Tipo de Logradouro é Obrigatorio; ");
+		}
+		
+		if(logradouro==null || logradouro.isEmpty()) {
+			msg.append("O Logradouro é Obrigatorio; ");
+		}
+		
+		if(numero==null || numero.isEmpty()) {
+			msg.append("O Numero é Obrigatorio; ");
+		}
+		return msg.toString();
+	}
+	
 }

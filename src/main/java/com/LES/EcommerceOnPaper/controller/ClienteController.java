@@ -34,12 +34,18 @@ public class ClienteController {
 	
 	@PostMapping("/cliente")
 	public ResponseEntity<Object> create(@RequestBody Cliente request) {
+		StringBuilder msm = new StringBuilder();
+		msm.append(request.validarDadosObrigatorios());
+		msm.append(request.validarSenha());
 		
-		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
+		if(msm.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(service.save(request));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msm);
 	}
 	
 	@PutMapping("/cliente/{id}")
-	public ResponseEntity<Cliente> update(@PathVariable Long id,@RequestBody Cliente request) {
+	public ResponseEntity<Object> update(@PathVariable Long id,@RequestBody Cliente request) {
 		Optional<Cliente> optional = service.findById(id);
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não Encontrada");
@@ -60,8 +66,17 @@ public class ClienteController {
 		model.setStatus(request.getStatus());
 		model.setTelefones(request.getTelefones());
 		model.setTipo(request.getTipo());
-		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+		
+		StringBuilder msm = new StringBuilder();
+		msm.append(model.validarDadosObrigatorios());
+		msm.append(model.validarSenha());
+		
+		if(msm.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msm);
 	}
+	
 	@DeleteMapping("/cliente/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id){
 		Optional<Cliente> optional = service.findById(id);
