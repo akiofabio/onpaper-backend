@@ -47,7 +47,7 @@ public class Cliente extends Usuario{
 	@OneToMany
 	private Set<Pedido> pedidos;
 
-	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Cupom> cupons;
 
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})

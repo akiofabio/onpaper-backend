@@ -36,7 +36,7 @@ public class Cartao {
 	@Column(name = "car_preferencial")
 	private boolean preferencial;
 	
-	@OneToOne(cascade = {CascadeType.ALL})
+	@OneToOne(cascade = {CascadeType.MERGE})
 	private Bandeira bandeira;
 	
 	public Cartao() {}
