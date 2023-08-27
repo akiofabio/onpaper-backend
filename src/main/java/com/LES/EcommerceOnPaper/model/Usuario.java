@@ -73,8 +73,12 @@ public class Usuario {
 	public String validarSenha() {
 		StringBuilder msg = new StringBuilder();
 		Pattern p;
+		if(senha == null) {
+			msg.append("A Senha deve ter pelo menos 8 digitos; ");
+			return msg.toString();
+		}
 		if(senha.length()<8) {
-			msg.append("A Senha deve ter pelo menos 8 digitos");
+			msg.append("A Senha deve ter pelo menos 8 digitos; ");
 		}
 		
 		p = Pattern.compile("[^a-z0-9 ]", Pattern.CASE_INSENSITIVE);
