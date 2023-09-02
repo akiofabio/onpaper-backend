@@ -184,18 +184,38 @@ public class Cliente extends Usuario{
 		if(dataNascimento==null) {
 			msg.append("A Data de Nascimento é Obrigatorio; ");
 		}
-		for(Endereco end : enderecos) {
-			msg.append(end.validarDadosObrigatorios());
-		}
 		for(Cartao cart : cartoes) {
 			msg.append(cart.validarDadosObrigatorios());
 		}
+		for(Endereco end : enderecos) {
+			msg.append(end.validarDadosObrigatorios());
+		}
+		msg.append(validarEnderecoEntrega());
+		msg.append(validarEnderecoCobrança());
 		return msg.toString();
 		
 	}
 	public Boolean validarCPF(long cpf) {
 		
 		return true;
+	}
+	
+	public String validarEnderecoEntrega() {
+		for(Endereco end : enderecos) {
+			if(end.getEntrega()) {
+				return "";
+			}
+		}
+		return "É obrigatori ter pelo menos um Endereço de Entrega";
+	}
+	
+	public String validarEnderecoCobrança() {
+		for(Endereco end : enderecos) {
+			if(end.getEntrega()) {
+				return "";
+			}
+		}
+		return "É obrigatori ter pelo menos um Endereço de Cobrança";
 	}
 
 	
