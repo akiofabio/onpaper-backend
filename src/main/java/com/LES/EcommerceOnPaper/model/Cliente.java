@@ -211,12 +211,12 @@ public class Cliente extends Usuario{
 	
 	public String validarEnderecoCobrança() {
 		for(Endereco end : enderecos) {
-			if(end.getEntrega()) {
+			if(end.getCobranca()) {
 				return "";
 			}
 		}
 		return "É obrigatori ter pelo menos um Endereço de Cobrança";
 	}
-
+	
 	
 }
