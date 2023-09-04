@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.LES.EcommerceOnPaper.model.Cliente;
+import com.LES.EcommerceOnPaper.model.Endereco;
 import com.LES.EcommerceOnPaper.service.ClienteService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -37,8 +39,10 @@ public class ClienteController {
 		StringBuilder msm = new StringBuilder();
 		msm.append(request.validarDadosObrigatorios());
 		msm.append(request.validarSenha());
-		
+		//msm.append(validarUnicidade(Long.toString(request.getCpf()),"cpf"));
+		//msm.append(validarUnicidade(request.getEmail(),"email"));
 		if(msm.isEmpty()) {
+			request.setStatus("Ativo");
 			return ResponseEntity.status(HttpStatus.OK).body(service.save(request));
 		}
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(msm);
@@ -123,6 +127,20 @@ public class ClienteController {
 		//System.out.println(cpfs.get());
 		 */
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByParametros(pesquisas, parametros));
+	}
+	
+	public String validarUnicidade(String valor,String atributo ) {
+		Optional<List<String>> valores = Optional.of(new ArrayList<String>());
+		valores.get().add(valor);
+		
+		Optional<List<String>> atributos= Optional.of(new ArrayList<String>());
+		atributos.get().add(atributo);
+		
+		List<Cliente> cliTemp = service.findByParametros(valores,atributos);
+		if(cliTemp.isEmpty()) {
+			return "";
+		}
+		return atributo + " já Cadastrado; ";
 	}
 	
 }

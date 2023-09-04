@@ -217,6 +217,4 @@ public class Cliente extends Usuario{
 		}
 		return "É obrigatori ter pelo menos um Endereço de Cobrança";
 	}
-	
-	
 }
