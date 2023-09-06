@@ -227,6 +227,13 @@ public class Endereco {
 		if(numero==null || numero.isEmpty()) {
 			msg.append("O Numero é Obrigatorio; ");
 		}
+		
+		if(entrega==null ) {
+			msg.append("A Entrega é Obrigatoria; ");
+		}
+		if(cobranca==null ) {
+			msg.append("A Cobranca é Obrigatoria; ");
+		}
 		return msg.toString();
 	}
 	
