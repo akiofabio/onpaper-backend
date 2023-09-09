@@ -103,5 +103,9 @@ public class PedidoService {
 		return repository.findByPendentes();
 	}
 
+	public Optional<Pedido> findByItensId(Long id) {
+		return repository.findByItensId( id);
+	}
+
 	
 }

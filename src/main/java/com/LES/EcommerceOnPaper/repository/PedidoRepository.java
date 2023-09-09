@@ -2,6 +2,7 @@ package com.LES.EcommerceOnPaper.repository;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -25,5 +26,7 @@ public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecif
 			+ " join onpaperdatabase.status_pedidos st on p_s.ｓtatus_stp_id = st.stp_id"
 			+ " where stp_status = :status and stp_data > :dataInicio and stp_data < :dataFinal", nativeQuery = true)
 	List<Pedido> findDados(String status,Date dataInicio, Date dataFinal);
+
+	Optional<Pedido> findByItensId(Long id);
 
 }

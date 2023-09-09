@@ -98,4 +98,9 @@ public class ClienteService {
 	public Optional<Cliente> findByPedidosId(Long id) {
 		return repository.findByPedidosId(id);
 	}
+	
+	public Optional<Cliente> findByPedidosItensId(Long id) {
+		return repository.findByPedidosItensId(id);
+	}
+	
 }

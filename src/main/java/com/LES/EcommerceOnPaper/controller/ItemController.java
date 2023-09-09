@@ -16,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LES.EcommerceOnPaper.model.Cliente;
+import com.LES.EcommerceOnPaper.model.Cupom;
 import com.LES.EcommerceOnPaper.model.DadosGrafico;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.model.StatusItem;
+import com.LES.EcommerceOnPaper.service.ClienteService;
 import com.LES.EcommerceOnPaper.service.ItemService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -27,10 +31,11 @@ import com.LES.EcommerceOnPaper.service.ItemService;
 public class ItemController {
 	
 	final ItemService service;
-
-	public ItemController(ItemService service) {
+	final ClienteService clienteService;
+	public ItemController(ItemService service, ClienteService clienteService) {
 		super();
 		this.service = service;
+		this.clienteService = clienteService;
 	}
 	
 	@PostMapping("/item")
@@ -82,5 +87,32 @@ public class ItemController {
 	@GetMapping("/item/dados/dataInicio={dataInicio}&dataFinal={dataFinal}&tipo={tipo}&escala={escala}")
 	public ResponseEntity<DadosGrafico> getByDados(@PathVariable Date dataInicio, @PathVariable Date dataFinal, @PathVariable String tipo, @PathVariable String escala) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findDados(dataInicio,dataFinal,tipo,escala));
+	}
+	
+	@PutMapping("/item/{acao}/{id}")
+	public ResponseEntity<Object> updateStatusItem(@PathVariable String acao,@PathVariable Long id) {
+		System.out.println("t1");
+		Optional<Item> optional = service.findById(id);
+		if(!optional.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
+		}
+		Item model = optional.get();
+		StatusItem st = new StatusItem(acao, new Date());
+		model.getStatus().add(st);
+		if(acao.equals("Trocado")) {
+			System.out.println("id: " + id);
+			Optional<Cliente> clienteOp = clienteService.findByPedidosItensId(id);
+			if(!clienteOp.isPresent()){
+				ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente do Pedido não Encontrado");
+			}
+			Cliente cliente = clienteOp.get();
+			Cupom novoCupom = new Cupom();
+			novoCupom.setDescricao("Cupom de troca do valor: R$ " + (model.getPreco()*model.getQuantidade()));
+			novoCupom.setTipo("Cupom de Troca");
+			novoCupom.setValor(model.getPreco()*model.getQuantidade());
+			cliente.getCupons().add(novoCupom);
+			clienteService.save(cliente);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 }

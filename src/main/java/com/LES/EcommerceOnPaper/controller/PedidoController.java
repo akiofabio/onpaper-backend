@@ -176,7 +176,6 @@ public class PedidoController {
 				StatusItem stI = new StatusItem(acao,st.getData());
 				stItemSet.add(stI);
 				item.setStatus(stItemSet);
-				//itemService.save(item);
 			}
 			else {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é permitido mudar estado do pedido intero com um item devolvido/trocado");
@@ -210,6 +209,8 @@ public class PedidoController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
+	
+	
 	
 	@DeleteMapping("/pedido/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id){

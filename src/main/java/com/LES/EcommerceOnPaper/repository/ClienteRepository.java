@@ -20,4 +20,6 @@ public interface ClienteRepository extends JpaRepository<Cliente,Long>,JpaSpecif
 	Optional<List<Cliente>> findByNomeContains(Optional<String> nomes);
 	
 	Optional<Cliente> findByPedidosId(Long id);
+	
+	Optional<Cliente> findByPedidosItensId(Long id);
 }

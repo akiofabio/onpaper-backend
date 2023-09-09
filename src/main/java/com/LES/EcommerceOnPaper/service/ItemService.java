@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.LES.EcommerceOnPaper.model.Categoria;
+import com.LES.EcommerceOnPaper.model.Cliente;
 import com.LES.EcommerceOnPaper.model.DadosGrafico;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Pedido;
