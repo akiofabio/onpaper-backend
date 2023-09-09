@@ -131,4 +131,13 @@ public class Pedido {
 		}
 		return ultimoStatus;
 	}
+	
+	public double getTotal() {
+		double total = 0;
+		total = frete;
+		for(Item item : itens) {
+			total+= item.getQuantidade() * item.getPreco();
+		}
+		return total;
+	}
 }

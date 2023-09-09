@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.LES.EcommerceOnPaper.model.Cliente;
 import com.LES.EcommerceOnPaper.model.Cupom;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.MeioDePagamento;
@@ -33,6 +34,7 @@ import com.LES.EcommerceOnPaper.service.ClienteService;
 import com.LES.EcommerceOnPaper.service.ItemService;
 import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
+import com.LES.EcommerceOnPaper.service.ProdutoService;
 import com.LES.EcommerceOnPaper.service.StatusItemService;
 
 @CrossOrigin(origins= "http://localhost:3000")
@@ -45,13 +47,15 @@ public class PedidoController {
 	final MeioDePagamentoService meioDePagamentoService;
 	final StatusItemService statusItemService;
 	final ClienteService clienteService;
-	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService, ClienteService clienteService) {
+	final ProdutoService produtoService;
+	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService, ClienteService clienteService, ProdutoService produtoService) {
 		super();
 		this.service = service;
 		this.itemService = itemService;
 		this.meioDePagamentoService = meioDePagamentoService;
 		this.statusItemService = statusItemService;
 		this.clienteService = clienteService;
+		this.produtoService = produtoService;
 	}
 	
 	@PostMapping("/pedido")
@@ -179,7 +183,31 @@ public class PedidoController {
 			}
 		}
 		model.getStatus().add(st);
-		
+		if(acao.equals("Aprovado")) {
+			for(Item item : model.getItens()) {
+				Optional<Produto> produtoOp = produtoService.findById(item.getIdProduto());
+				if(!produtoOp.isPresent()) {
+					ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto do Pedido não Encontrado");
+				}
+				Produto produto = produtoOp.get();
+				produto.setQuantidade(produto.getQuantidade()-item.getQuantidade());
+				produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada()-item.getQuantidade());
+			}
+		}
+		else if(acao.equals("Trocado")) {
+			System.out.println("id: " + id);
+			Optional<Cliente> clienteOp = clienteService.findByPedidosId(id);
+			if(!clienteOp.isPresent()){
+				ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente do Pedido não Encontrado");
+			}
+			Cliente cliente = clienteOp.get();
+			Cupom novoCupom = new Cupom();
+			novoCupom.setDescricao("Cupom de troca do valor: R$ " + model.getTotal());
+			novoCupom.setTipo("Cupom de Troca");
+			novoCupom.setValor(model.getTotal());
+			cliente.getCupons().add(novoCupom);
+			clienteService.save(cliente);
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	

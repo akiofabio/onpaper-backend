@@ -105,27 +105,9 @@ public class ClienteController {
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
+	
 	@GetMapping("/cliente/pesquisa")
 	public ResponseEntity<List<Cliente>> getByParametros(@RequestParam(name = "pes") Optional<List<String>> pesquisas, @RequestParam(name = "par") Optional<List<String>> parametros) {
-		/*Optional<List<String>> nomes= Optional.empty();
-		Optional<List<String>> cpfs = Optional.empty();
-		Optional<List<Date>> dataNascimento = Optional.empty();
-		System.out.println(pesquisas.get().get(0));
-		for(String parametro : parametros.get()) {
-			if(parametro.equals("nome")) {
-				if(nomes.isEmpty()) {
-					nomes = pesquisas.get().get(parametros.get().indexOf(parametro));
-				}
-				else {
-					nomes += " OR " + pesquisas.get().get(parametros.get().indexOf(parametro));
-				}
-			}
-		}
-		//System.out.println(nomes);
-		Optional<String> opNomes = Optional.ofNullable(nomes).filter(s -> !s.isEmpty());
-		//System.out.println(opNomes.get());
-		//System.out.println(cpfs.get());
-		 */
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByParametros(pesquisas, parametros));
 	}
 	

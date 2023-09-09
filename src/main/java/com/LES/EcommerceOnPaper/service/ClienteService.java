@@ -94,4 +94,8 @@ public class ClienteService {
 	        .map(value -> builder.like(root.get(parametro), contains(value)))
 	        .toArray(Predicate[]::new));
 	}
+	
+	public Optional<Cliente> findByPedidosId(Long id) {
+		return repository.findByPedidosId(id);
+	}
 }
