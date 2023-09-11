@@ -20,12 +20,15 @@ public class Pedido {
 	@Column(name = "ped_id")
 	private long id;
 	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<StatusPedido> status;
 	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.MERGE})
 	private Set<Item> itens;
 	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<MeioDePagamento> meioDePagamentos;
 	

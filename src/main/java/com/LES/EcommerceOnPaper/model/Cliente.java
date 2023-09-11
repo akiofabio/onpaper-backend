@@ -10,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
+import javax.persistence.OrderBy;
 import javax.persistence.PrimaryKeyJoinColumn;
 
 @Entity
@@ -35,21 +36,26 @@ public class Cliente extends Usuario{
 	@Column(name = "cli_score")
 	private String score;
 	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Telefone> telefones;
-
+	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Endereco> enderecos;
-
+	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cartao> cartoes;
 
 	@OneToMany
+	@javax.persistence.OrderBy(value = "id")
 	private Set<Pedido> pedidos;
-
+	
+	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE})
 	private Set<Cupom> cupons;
-
+	
 	@OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Carrinho carrinho;
 

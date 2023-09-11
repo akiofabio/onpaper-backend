@@ -14,12 +14,19 @@ import com.LES.EcommerceOnPaper.model.Pedido;
 
 @Repository
 public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecificationExecutor<Cliente> {
-	@Query( value="select DISTINCT * from onpaperdatabase.pedidos p "
-			+ "	join onpaperdatabase.pedidos_ｓtatus p_s on p.ped_id = p_s.pedido_ped_id"
-			+ " join onpaperdatabase.status_pedidos st on p_s.ｓtatus_stp_id = st.stp_id"
-			+ " where stp_status = 'Em Processamento' or stp_status = 'Em Troca' or "
-			+ "stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Devolução'", nativeQuery = true)
-	List<Pedido> findByPendentes();
+	@Query( value="SELECT  *\r\n"
+			+ "	FROM onpaperdatabase.pedidos p INNER JOIN\r\n"
+			+ "		(\r\n"
+			+ "			SELECT pedido_ped_id, MAX(status_stp_id) ultimo_id\r\n"
+			+ "			FROM onpaperdatabase.pedidos_status p_s join\r\n"
+			+ "				 onpaperdatabase.status_pedidos st1 on p_s.status_stp_id = st1.stp_id\r\n"
+			+ "			GROUP BY pedido_ped_id\r\n"
+			+ "		) MaxDates ON p.ped_id = MaxDates.pedido_ped_id INNER JOIN\r\n"
+			+ "		onpaperdatabase.status_pedidos st2 ON   MaxDates.ultimo_id = st2.stp_id\r\n"
+			+ "	WHERE stp_status = 'Em Processamento' or stp_status = 'Em Troca' or \r\n"
+			+ "	stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Troca' or \r\n"
+			+ "	stp_status ='Em Preparo' or stp_status ='Enviado' or stp_status ='Troca Aprovada'", nativeQuery = true)
+	Optional<List<Pedido>> findByPendentes();
 
 	@Query( value="select * from onpaperdatabase.pedidos p "
 			+ "	join onpaperdatabase.pedidos_ｓtatus p_s on p.ped_id = p_s.pedido_ped_id"

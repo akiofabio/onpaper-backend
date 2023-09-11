@@ -99,7 +99,7 @@ public class PedidoService {
 	        .toArray(Predicate[]::new));
 	}
 
-	public List<Pedido> findByPendentes() {
+	public Optional<List<Pedido>> findByPendentes() {
 		return repository.findByPendentes();
 	}
 

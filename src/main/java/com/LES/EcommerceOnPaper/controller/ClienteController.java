@@ -106,6 +106,15 @@ public class ClienteController {
 		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
 	
+	@GetMapping("/cliente/pedido/{id}")
+	public ResponseEntity<Object> getByPedidoId(@PathVariable Long id) {
+		Optional<Cliente> optional = service.findByPedidosId(id);
+		if(!optional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente não Encontrado");
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
+	}
+	
 	@GetMapping("/cliente/pesquisa")
 	public ResponseEntity<List<Cliente>> getByParametros(@RequestParam(name = "pes") Optional<List<String>> pesquisas, @RequestParam(name = "par") Optional<List<String>> parametros) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByParametros(pesquisas, parametros));

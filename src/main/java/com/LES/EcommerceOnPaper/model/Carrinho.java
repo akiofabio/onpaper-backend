@@ -36,7 +36,7 @@ public class Carrinho {
 	private Date ultimoAdicionado;
 	
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-	@OrderBy
+	@javax.persistence.OrderBy(value = "id")
 	private Set<Item> itens;
 	
 	public Carrinho() {}

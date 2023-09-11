@@ -228,8 +228,15 @@ public class PedidoController {
 	}
 	
 	@GetMapping("/pedido/pendentes")
-	public ResponseEntity<List<Pedido>> getPedidosPendentes(){
-		return ResponseEntity.status(HttpStatus.OK).body(service.findByPendentes());
+	public ResponseEntity<Object> getPedidosPendentes(){
+		Optional<List<Pedido>> optional = service.findByPendentes();
+		if(!optional.isPresent()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não há Pedidos Pendentes");
+		}
+		if(optional.get().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Não há Pedidos Pendentes");
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(optional.get());
 	}
 	
 	@GetMapping("/pedido/{id}")

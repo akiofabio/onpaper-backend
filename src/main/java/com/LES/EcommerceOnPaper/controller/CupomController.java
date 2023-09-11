@@ -48,6 +48,7 @@ public class CupomController {
 		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
+	
 	@DeleteMapping("/cupom/{id}")
 	public ResponseEntity<Object> delete(@PathVariable Long id){
 		Optional<Cupom> optional = service.findById(id);
