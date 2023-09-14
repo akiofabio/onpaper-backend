@@ -1,5 +1,8 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +39,7 @@ import com.LES.EcommerceOnPaper.service.MeioDePagamentoService;
 import com.LES.EcommerceOnPaper.service.PedidoService;
 import com.LES.EcommerceOnPaper.service.ProdutoService;
 import com.LES.EcommerceOnPaper.service.StatusItemService;
-
+import com.LES.EcommerceOnPaper.service.CupomService;
 @CrossOrigin(origins= "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
@@ -48,7 +51,8 @@ public class PedidoController {
 	final StatusItemService statusItemService;
 	final ClienteService clienteService;
 	final ProdutoService produtoService;
-	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService, ClienteService clienteService, ProdutoService produtoService) {
+	final CupomService cupomService;
+	public PedidoController(PedidoService service, ItemService itemService, MeioDePagamentoService meioDePagamentoService, StatusItemService statusItemService, ClienteService clienteService, ProdutoService produtoService, CupomService cupomService) {
 		super();
 		this.service = service;
 		this.itemService = itemService;
@@ -56,6 +60,7 @@ public class PedidoController {
 		this.statusItemService = statusItemService;
 		this.clienteService = clienteService;
 		this.produtoService = produtoService;
+		this.cupomService = cupomService;
 	}
 	
 	@PostMapping("/pedido")
@@ -131,7 +136,7 @@ public class PedidoController {
 			
 			StatusPedido statusProc= new StatusPedido();
 			statusProc.setStatus("Em Processamento");
-			statusProc.setData(new Date());
+			statusProc.setData(LocalDateTime.now());
 			statusSet.add(statusProc);
 			request.setStatus(statusSet);
 			for(Item item : request.getItens()) {
@@ -142,12 +147,21 @@ public class PedidoController {
 				itemService.save(item);
 			}
 		}
-		/*
-		for(MeioDePagamento cupom : cuponsTroca) {
-			
+		for(MeioDePagamento meio : request.getMeioDePagamentos()) {
+			if(meio.getTipo().equals( "Cupom de Troca" ) || meio.getTipo().equals( "Cupom Promocional")){
+				Optional<Cliente> clienteOP= clienteService.findByCuponsId(meio.getIdTipo());
+				if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
+				}
+				Cliente cliente = clienteOP.get();
+				Optional<Cupom> cupom = cupomService.findById(meio.getIdTipo());
+				if(!cupom.isPresent() || cupom.isEmpty()) {
+					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cupom não encontrado");
+				}
+				cliente.getCupons().remove(cupom.get());
+				clienteService.save(cliente);
+			}
 		}
-		 */
-		
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	
@@ -163,13 +177,13 @@ public class PedidoController {
 	}
 	
 	@PutMapping("/pedido/{acao}/{id}")
-	public ResponseEntity<Object> update(@PathVariable String acao,@PathVariable Long id) {
+	public ResponseEntity<Object> updateStatus(@PathVariable String acao,@PathVariable Long id) {
 		Optional<Pedido> optional = service.findById(id);
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
 		}
 		Pedido model = optional.get();
-		StatusPedido st = new StatusPedido(acao,new Date());
+		StatusPedido st = new StatusPedido(acao,LocalDateTime.now());
 		for(Item item : model.getItens()) {
 			if(item.getUltimoStatus().getStatus().equals(model.getUltimoStatus().getStatus())) {
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
@@ -194,7 +208,6 @@ public class PedidoController {
 			}
 		}
 		else if(acao.equals("Trocado")) {
-			System.out.println("id: " + id);
 			Optional<Cliente> clienteOp = clienteService.findByPedidosId(id);
 			if(!clienteOp.isPresent()){
 				ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente do Pedido não Encontrado");

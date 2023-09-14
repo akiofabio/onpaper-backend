@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.repository;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,5 +21,5 @@ public interface ItemRepository extends JpaRepository<Item,Long> {
 			+ "	join onpaperdatabase.itens_status i_st on i.ite_id = i_st.item_ite_id"
 			+ " join onpaperdatabase.status_itens st on status_sti_id = st.sti_id"
 			+ " where sti_status = :status and sti_data > :dataInicio and sti_data < :dataFinal", nativeQuery = true)
-	List<Item> findDados(String status,Date dataInicio, Date dataFinal);
+	List<Item> findDados(String status,LocalDateTime dataInicio, LocalDateTime dataFinal);
 }

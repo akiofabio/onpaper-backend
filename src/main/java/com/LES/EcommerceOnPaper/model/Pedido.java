@@ -127,7 +127,7 @@ public class Pedido {
 		if(status !=null && !status.isEmpty()) {
 			ultimoStatus = status.iterator().next();
 			for(StatusPedido st : status) {
-				if(st.getData().after(ultimoStatus.getData())) {
+				if(st.getData().isAfter(ultimoStatus.getData())) {
 					ultimoStatus = st;
 				}
 			}

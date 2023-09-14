@@ -1,6 +1,10 @@
 package com.LES.EcommerceOnPaper.service;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -54,97 +58,92 @@ public class ItemService {
 		return repository.findById(id);
 	}
 
-	public DadosGrafico findDados(Date dataInicio, Date dataFinal, String tipo, String escala) {
+	public DadosGrafico findDados(LocalDateTime dataInicio, LocalDateTime dataFinal, String tipo, String escala) {
 		ArrayList<Item> itens = (ArrayList<Item>) repository.findDados("ENTREGUE",dataInicio,dataFinal);
 		ArrayList<Categoria> categorias = (ArrayList<Categoria>) categoriaRepository.findAll();
-		SimpleDateFormat  formatoData = new SimpleDateFormat("ddMMyyyy");
+		String  formatoData = "ddMMyyyy";
 		
-		Calendar data =  Calendar.getInstance();
-		ArrayList<Calendar> datas = new ArrayList<Calendar>();
+		
+		ArrayList<LocalDateTime> datas = new ArrayList<LocalDateTime>();
 		ArrayList<String> labelDatas = new ArrayList<String>();
 		ArrayList<String> labelCategorias = new ArrayList<String>();
 		List<List<Double>> dados = new ArrayList<List<Double>>();
-		int escalaCalendar = 0;
-		Calendar dataTenp = Calendar.getInstance();
-				
+		ChronoUnit escalaCalendar = ChronoUnit.MONTHS;
+		
+		LocalDateTime data =  LocalDateTime.now();
+		LocalDateTime dataTemp = LocalDateTime.now();
+		
 		for(Categoria categoria : categorias) {
 			labelCategorias.add(categoria.getNome());
 			dados.add(new ArrayList<Double>());
 		}
-		data.setTime(dataInicio);
-		dataTenp.setTime(data.getTime());
-		datas.add(dataTenp);
+		data = LocalDateTime.parse(dataInicio.toString());
+		dataTemp = LocalDateTime.parse(data.toString());
+		datas.add(dataTemp);
 		
 		if(escala.equals("DIA")) {
-			escalaCalendar= Calendar.DAY_OF_MONTH;
-			formatoData = new SimpleDateFormat("dd/MM/yyyy");
-			labelDatas.add(formatoData.format(data.getTime() ));
-			data.add(escalaCalendar, 1);
+			escalaCalendar= ChronoUnit.DAYS;
+			formatoData = "dd/MM/yyyy";
+			labelDatas.add(DateTimeFormatter.ofPattern(formatoData).format(data));
+			data = data.plus(1,escalaCalendar);
 			for(List<Double> dado : dados) {
 				dado.add(0d);
 			}
 		}
 		else if(escala.equals("MES")) {
-			escalaCalendar= Calendar.MONTH;
-			formatoData = new SimpleDateFormat("MM/yyyy");
-			labelDatas.add(formatoData.format(data.getTime()));
-			data.add(Calendar.DAY_OF_MONTH, -data.get(Calendar.DAY_OF_MONTH) + 1);
-			data.add(escalaCalendar, 1);
+			escalaCalendar= ChronoUnit.MONTHS;
+			formatoData = "MM/yyyy";
+			labelDatas.add(DateTimeFormatter.ofPattern(formatoData).format(data));
+			data = data.plus(-data.getDayOfMonth() + 1,ChronoUnit.DAYS);
+			data = data.plus(1,escalaCalendar);
 			for(List<Double> dado : dados) {
 				dado.add(0d);
 			}
 		}
 		else if(escala.equals("ANO")) {
-			escalaCalendar= Calendar.YEAR;
-			formatoData = new SimpleDateFormat("yyyy");
-			labelDatas.add(formatoData.format(data.getTime()));
-			data.add(Calendar.DAY_OF_MONTH, -data.get(Calendar.DAY_OF_MONTH) + 1);
-			data.add(Calendar.MONTH, -data.get(Calendar.MONTH) + 1);
-			data.add(escalaCalendar, 1);
+			escalaCalendar= ChronoUnit.YEARS;
+			formatoData = "yyyy";
+			labelDatas.add(DateTimeFormatter.ofPattern(formatoData).format(data));
+			data = data.plus(-data.getDayOfMonth() + 1,ChronoUnit.DAYS);
+			data = data.plus(-data.getMonthValue() + 1,ChronoUnit.MONTHS);
+			data = data.plus(1 , escalaCalendar);
 			for(List<Double> dado : dados) {
 				dado.add(0d);
 			}
 		}
-		else if(escala.equals("SEMANA")) {
-			escalaCalendar= Calendar.WEEK_OF_MONTH;
-			formatoData = new SimpleDateFormat("WW MM/yyyy");
-		}
-		
-		while(data.getTime().before(dataFinal)) {
-			dataTenp = Calendar.getInstance();
-			dataTenp.setTime(data.getTime());
-			datas.add(dataTenp);
-			labelDatas.add(formatoData.format(data.getTime()));
-			data.add(escalaCalendar, 1);
+		while(data.isBefore(dataFinal)) {
+			dataTemp = LocalDateTime.now();
+			dataTemp = LocalDateTime.parse(data.toString());
+			datas.add(dataTemp);
+			labelDatas.add(DateTimeFormatter.ofPattern(formatoData).format(data));
+			data = data.plus(1,escalaCalendar);
 			for(List<Double> dado : dados) {
 				dado.add(0d);
 			}
 		}
-		dataTenp = Calendar.getInstance();
-		dataTenp.setTime(dataFinal);
-		datas.add(dataTenp);
+		dataTemp = LocalDateTime.now();
+		dataTemp = LocalDateTime.parse(dataFinal.toString());
+		datas.add(dataTemp);
 		
-		for(Calendar dt : datas) {
-			System.out.println(dt.getTime());
+		for(LocalDateTime dt : datas) {
+			System.out.println(dt);
 		}
 		if(itens!=null && !itens.isEmpty()) {
 			for(Item item: itens) {
-				for(StatusItem status : item.getStatus()) {
-					if(status.getStatus().equals("ENTREGUE")) {
-						for(int i=0; i<labelDatas.size(); i++) {
-							if(status.getData().after(datas.get(i).getTime()) && status.getData().before(datas.get(i+1).getTime())){
-								Produto produto = produtoRepository.getById(item.getIdProduto());
-								for(Categoria categoria : produto.getCategorias()) {
-									for(int j = 0; j < labelCategorias.size(); j++) {
-										if(labelCategorias.get(j).equals(categoria.getNome())){
-											if(tipo.equals("VALOR")) {
-												dados.get(j).set(i, item.getPreco() * item.getQuantidade());
-											}
-											else if(tipo.equals("QUANTIDADE")) {
-												dados.get(j).set(i,dados.get(j).get(i) + (double) item.getQuantidade());
-											}
-											break;
+				if(item.getUltimoStatus().getStatus().equals("Entregue")) {
+					for(int i=0; i<labelDatas.size(); i++) {
+						if(item.getUltimoStatus().getData().isAfter(datas.get(i)) && item.getUltimoStatus().getData().isBefore(datas.get(i+1))){
+							Produto produto = produtoRepository.getById(item.getIdProduto());
+							for(Categoria categoria : produto.getCategorias()) {
+								for(int j = 0; j < labelCategorias.size(); j++) {
+									if(labelCategorias.get(j).equals(categoria.getNome())){
+										if(tipo.equals("VALOR")) {
+											dados.get(j).set(i, item.getPreco() * item.getQuantidade());
 										}
+										else if(tipo.equals("QUANTIDADE")) {
+											dados.get(j).set(i,dados.get(j).get(i) + (double) item.getQuantidade());
+										}
+										break;
 									}
 								}
 							}

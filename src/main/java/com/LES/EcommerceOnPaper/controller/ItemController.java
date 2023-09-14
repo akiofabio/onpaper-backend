@@ -1,5 +1,8 @@
 package com.LES.EcommerceOnPaper.controller;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -86,7 +89,7 @@ public class ItemController {
 	
 	@GetMapping("/item/dados/dataInicio={dataInicio}&dataFinal={dataFinal}&tipo={tipo}&escala={escala}")
 	public ResponseEntity<DadosGrafico> getByDados(@PathVariable Date dataInicio, @PathVariable Date dataFinal, @PathVariable String tipo, @PathVariable String escala) {
-		return ResponseEntity.status(HttpStatus.OK).body(service.findDados(dataInicio,dataFinal,tipo,escala));
+		return ResponseEntity.status(HttpStatus.OK).body(service.findDados(dataInicio.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),dataFinal.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime(),tipo,escala));
 	}
 	
 	@PutMapping("/item/{acao}/{id}")
@@ -97,7 +100,7 @@ public class ItemController {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
 		}
 		Item model = optional.get();
-		StatusItem st = new StatusItem(acao, new Date());
+		StatusItem st = new StatusItem(acao, LocalDateTime.now());
 		model.getStatus().add(st);
 		if(acao.equals("Trocado")) {
 			System.out.println("id: " + id);

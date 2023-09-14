@@ -1,5 +1,7 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -22,11 +24,11 @@ public class StatusPedido {
 	private String status;
 	
 	@Column(name = "stp_data")
-	private Date data;
+	private LocalDateTime data;
 
 	public StatusPedido() {}
 	
-	public StatusPedido(String status, Date data) {
+	public StatusPedido(String status, LocalDateTime data) {
 		super();
 		this.status = status;
 		this.data = data;
@@ -48,11 +50,11 @@ public class StatusPedido {
 		this.status = status;
 	}
 
-	public Date getData() {
+	public LocalDateTime getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDateTime data) {
 		this.data = data;
 	}	
 }

@@ -117,13 +117,15 @@ public class Item {
 	public void setDisponibilidade(String disponibilidade) {
 		this.disponibilidade = disponibilidade;
 	}
+	
+	
 
 	public StatusItem getUltimoStatus() {
 		StatusItem ultimoStatus = null;
 		if(status !=null && !status.isEmpty()) {
 			ultimoStatus = status.iterator().next();
 			for(StatusItem st : status) {
-				if(st.getData().after(ultimoStatus.getData())) {
+				if(st.getData().isAfter(ultimoStatus.getData())) {
 					ultimoStatus = st;
 				}
 			}

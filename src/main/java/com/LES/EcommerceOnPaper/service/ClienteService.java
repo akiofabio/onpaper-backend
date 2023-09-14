@@ -102,5 +102,9 @@ public class ClienteService {
 	public Optional<Cliente> findByPedidosItensId(Long id) {
 		return repository.findByPedidosItensId(id);
 	}
+
+	public Optional<Cliente> findByCuponsId(long id) {
+		return repository.findByCuponsId(id);
+	}
 	
 }

@@ -1,5 +1,6 @@
 package com.LES.EcommerceOnPaper.model;
 
+import java.time.LocalDateTime;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,9 +24,9 @@ public class StatusItem {
 	private String status;
 	
 	@Column(name = "sti_data")
-	private Date data;
+	private LocalDateTime data;
 
-	public StatusItem(String status, Date data) {
+	public StatusItem(String status, LocalDateTime data) {
 		super();
 		this.status = status;
 		this.data = data;
@@ -48,11 +49,11 @@ public class StatusItem {
 		this.status = status;
 	}
 
-	public Date getData() {
+	public LocalDateTime getData() {
 		return data;
 	}
 
-	public void setData(Date data) {
+	public void setData(LocalDateTime data) {
 		this.data = data;
 	}
 }

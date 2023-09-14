@@ -24,7 +24,10 @@ public class MeioDePagamento {
 	
 	@Column(name = "mei_valor")
 	private double valor;
-
+	
+	@Column(name = "mei_idTipo")
+	private long idTipo;
+	
 	public MeioDePagamento() {}
 	
 	public MeioDePagamento(String tipo, String detalhes, double valor) {
@@ -63,6 +66,14 @@ public class MeioDePagamento {
 
 	public void setValor(double valor) {
 		this.valor = valor;
+	}
+
+	public long getIdTipo() {
+		return idTipo;
+	}
+
+	public void setIdTipo(long idTipo) {
+		this.idTipo = idTipo;
 	}
 	
 	
