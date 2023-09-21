@@ -11,20 +11,21 @@ import org.springframework.stereotype.Repository;
 
 import com.LES.EcommerceOnPaper.model.Cliente;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.service.PedidoCustomRepository;
 
 @Repository
-public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecificationExecutor<Cliente> {
-	@Query( value="SELECT  *\r\n"
-			+ "	FROM onpaperdatabase.pedidos p INNER JOIN\r\n"
-			+ "		(\r\n"
-			+ "			SELECT pedido_ped_id, MAX(status_stp_id) ultimo_id\r\n"
-			+ "			FROM onpaperdatabase.pedidos_status p_s join\r\n"
-			+ "				 onpaperdatabase.status_pedidos st1 on p_s.status_stp_id = st1.stp_id\r\n"
-			+ "			GROUP BY pedido_ped_id\r\n"
-			+ "		) MaxDates ON p.ped_id = MaxDates.pedido_ped_id INNER JOIN\r\n"
-			+ "		onpaperdatabase.status_pedidos st2 ON   MaxDates.ultimo_id = st2.stp_id\r\n"
-			+ "	WHERE stp_status = 'Em Processamento' or stp_status = 'Em Troca' or \r\n"
-			+ "	stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Troca' or \r\n"
+public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecificationExecutor<Cliente>, PedidoCustomRepository {
+	@Query( value="SELECT  *"
+			+ "	FROM onpaperdatabase.pedidos p INNER JOIN"
+			+ "		("
+			+ "			SELECT pedido_ped_id, MAX(status_stp_id) ultimo_id"
+			+ "			FROM onpaperdatabase.pedidos_status p_s join"
+			+ "				 onpaperdatabase.status_pedidos st1 on p_s.status_stp_id = st1.stp_id"
+			+ "			GROUP BY pedido_ped_id"
+			+ "		) MaxDates ON p.ped_id = MaxDates.pedido_ped_id INNER JOIN"
+			+ "		onpaperdatabase.status_pedidos st2 ON   MaxDates.ultimo_id = st2.stp_id"
+			+ "	WHERE stp_status = 'Em Processamento' or stp_status = 'Em Troca' or "
+			+ "	stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Troca' or"
 			+ "	stp_status ='Em Preparo' or stp_status ='Enviado' or stp_status ='Troca Aprovada'", nativeQuery = true)
 	Optional<List<Pedido>> findByPendentes();
 
@@ -35,5 +36,7 @@ public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecif
 	List<Pedido> findDados(String status,Date dataInicio, Date dataFinal);
 
 	Optional<Pedido> findByItensId(Long id);
-
+	
 }
+
+

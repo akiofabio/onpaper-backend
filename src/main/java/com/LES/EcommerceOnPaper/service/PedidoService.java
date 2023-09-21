@@ -57,12 +57,17 @@ public class PedidoService {
 
 	
 	public ResponseEntity<List<Pedido>> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
+		return ResponseEntity.status(HttpStatus.OK).body(repository.findParametros(pesquisas.get(), parametros.get()));
+		
+		/*
+		List<Pedido> pedidos = new ArrayList<Pedido>();
 		List<String> nomes = new ArrayList<String>();
 		List<String> cpfs =  new ArrayList<String>();
+		List<String> produtos = new ArrayList<String>();
+		List<String> status = new ArrayList<String>();
+		List<String> statusData = new ArrayList<String>();
 		
-		return  ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
-		
-		/*if(!pesquisas.isPresent()) {
+		if(!pesquisas.isPresent()) {
 			return  ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
 		}
 		
