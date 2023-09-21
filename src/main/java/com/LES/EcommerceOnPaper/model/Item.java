@@ -8,6 +8,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -41,6 +42,9 @@ public class Item {
 	
 	@Column(name = "ite_disponibilidade")
 	private String disponibilidade;
+	
+	@ManyToOne
+	private Produto produto;
 	
 	public Item() {}
 
@@ -117,8 +121,14 @@ public class Item {
 	public void setDisponibilidade(String disponibilidade) {
 		this.disponibilidade = disponibilidade;
 	}
-	
-	
+
+	public Produto getProduto() {
+		return produto;
+	}
+
+	public void setProduto(Produto produto) {
+		this.produto = produto;
+	}
 
 	public StatusItem getUltimoStatus() {
 		StatusItem ultimoStatus = null;

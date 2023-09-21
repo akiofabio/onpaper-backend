@@ -8,6 +8,7 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -48,7 +49,7 @@ public class Cliente extends Usuario{
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cartao> cartoes;
 
-	@OneToMany
+	@OneToMany(fetch = FetchType.EAGER)
 	@javax.persistence.OrderBy(value = "id")
 	private Set<Pedido> pedidos;
 	

@@ -5,9 +5,11 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
@@ -43,6 +45,13 @@ public class Pedido {
 	
 	@Column(name = "ped_frete")
 	private float frete;
+	
+	@ManyToOne
+	private Endereco enderecoObj;
+	
+	
+	@ManyToOne(fetch = FetchType.LAZY)
+	private Cliente cliente;
 	
 	public Pedido() {}
 
@@ -122,6 +131,22 @@ public class Pedido {
 		this.frete = frete;
 	}
 	
+	public Endereco getEnderecoObj() {
+		return enderecoObj;
+	}
+
+	public void setEnderecoObj(Endereco enderecoObj) {
+		this.enderecoObj = enderecoObj;
+	}
+
+	public Cliente getCliente() {
+		return cliente;
+	}
+
+	public void setCliente(Cliente cliente) {
+		this.cliente = cliente;
+	}
+
 	public StatusPedido getUltimoStatus() {
 		StatusPedido ultimoStatus = null;
 		if(status !=null && !status.isEmpty()) {

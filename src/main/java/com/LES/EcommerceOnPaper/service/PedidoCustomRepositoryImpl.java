@@ -33,7 +33,7 @@ public class PedidoCustomRepositoryImpl implements PedidoCustomRepository {
 		
 		Join<Pedido, Item> itemsJoin = root.join("itens", JoinType.INNER);
         Join<Pedido, StatusPedido> statusPedidoJoin = root.join("status", JoinType.INNER);
-        Join<Pedido, Cliente> clienteJoin = rootCliente.join("pedidos", JoinType.INNER);
+        Join<Pedido, Cliente> clienteJoin = root.join("cliente", JoinType.INNER);
         //Join<Item, Produto> produtoJoin = itemsJoin.join("idProduto", JoinType.INNER);
         
         List<Predicate> predicates = new ArrayList<>();
