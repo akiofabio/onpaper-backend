@@ -147,13 +147,17 @@ public class PedidoController {
 				itemService.save(item);
 			}
 		}
+		
+		Cliente cliente = null;
 		for(MeioDePagamento meio : request.getMeioDePagamentos()) {
 			if(meio.getTipo().equals( "Cupom de Troca" ) || meio.getTipo().equals( "Cupom Promocional")){
-				Optional<Cliente> clienteOP= clienteService.findByCuponsId(meio.getIdTipo());
-				if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
-					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
+				if(cliente != null ) {
+					Optional<Cliente> clienteOP= clienteService.findByCuponsId(meio.getIdTipo());
+					if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
+					}
+					cliente = clienteOP.get();
 				}
-				Cliente cliente = clienteOP.get();
 				Optional<Cupom> cupom = cupomService.findById(meio.getIdTipo());
 				if(!cupom.isPresent() || cupom.isEmpty()) {
 					return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cupom não encontrado");
@@ -161,6 +165,16 @@ public class PedidoController {
 				cliente.getCupons().remove(cupom.get());
 				clienteService.save(cliente);
 			}
+			else {
+				if(cliente != null ) {
+					Optional<Cliente> clienteOP= clienteService.findByCartoesId(meio.getIdTipo());
+					if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
+					}
+					cliente = clienteOP.get();
+				}
+			}
+			
 		}
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}

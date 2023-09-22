@@ -40,7 +40,7 @@ public class PedidoCustomRepositoryImpl implements PedidoCustomRepository {
         
         for(String parametro : parametros) {
         	if(parametro.equals("nomeCliente")) {
-        		predicates.add(criteriaBuilder.like(clienteJoin.get("nome"), contains(conteudos.get(parametros.indexOf(parametro)))));
+        		//predicates.add(criteriaBuilder.like(clienteJoin.get("nome"), contains(conteudos.get(parametros.indexOf(parametro)))));
         	}
         	
         	if(parametro.equals("nomeProduto")) {

@@ -106,5 +106,10 @@ public class ClienteService {
 	public Optional<Cliente> findByCuponsId(long id) {
 		return repository.findByCuponsId(id);
 	}
+
+	public Optional<Cliente> findByCartoesId(long id) {
+		
+		return repository.findByCartoesId(id);
+	}
 	
 }

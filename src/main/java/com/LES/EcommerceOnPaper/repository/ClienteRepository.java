@@ -24,4 +24,6 @@ public interface ClienteRepository extends JpaRepository<Cliente,Long>,JpaSpecif
 	Optional<Cliente> findByPedidosItensId(Long id);
 
 	Optional<Cliente> findByCuponsId(long id);
+
+	Optional<Cliente> findByCartoesId(long id);
 }
