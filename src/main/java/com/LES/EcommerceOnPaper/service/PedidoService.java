@@ -57,53 +57,12 @@ public class PedidoService {
 
 	
 	public ResponseEntity<List<Pedido>> findByParametros(Optional<List<String>> pesquisas, Optional<List<String>> parametros){
+		if(pesquisas.isEmpty()) {
+			return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
+		}
 		return ResponseEntity.status(HttpStatus.OK).body(repository.findParametros(pesquisas.get(), parametros.get()));
-		
-		/*
-		List<Pedido> pedidos = new ArrayList<Pedido>();
-		List<String> nomes = new ArrayList<String>();
-		List<String> cpfs =  new ArrayList<String>();
-		List<String> produtos = new ArrayList<String>();
-		List<String> status = new ArrayList<String>();
-		List<String> statusData = new ArrayList<String>();
-		
-		if(!pesquisas.isPresent()) {
-			return  ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
-		}
-		
-		//Specification<Pedido> specification = Specification.where(parametroIn( pesquisas.get()),parametros.get());
-		
-		for(String parametro : parametros.get()) {
-			if(parametro.equals("nome")) {
-				System.out.println(pesquisas.get().get(parametros.get().indexOf(parametro)));
-				if(!pesquisas.get().get(parametros.get().indexOf(parametro)).isBlank())
-					nomes.add(pesquisas.get().get(parametros.get().indexOf(parametro)));
-			}
-			if(parametro.equals("cpf")) {
-				cpfs.add(pesquisas.get().get(parametros.get().indexOf(parametro)));
-			}
-			if(parametro.equals("dataNacimento")) {
-				//datasNascimento.add(
-				//		pesquisas.get().get(parametros.get().indexOf(parametro)));
-			}
-		}
-		
-		
-		
-		return ResponseEntity.status(HttpStatus.OK).body(repository.findAll());
-		*/
 	}
 	
-	private static String contains(String expression) {
-	    return MessageFormat.format("%{0}%", expression);
-	}
-	
-	public static Specification<Pedido> parametroIn(List<String> values , String parametro) {
-	    return (root, query, builder) -> builder.or(values.stream()
-	        .map(value -> builder.like(root.get(parametro), contains(value)))
-	        .toArray(Predicate[]::new));
-	}
-
 	public Optional<List<Pedido>> findByPendentes() {
 		return repository.findByPendentes();
 	}

@@ -9,9 +9,13 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "pedidos")
@@ -25,6 +29,9 @@ public class Pedido {
 	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
 	private Set<StatusPedido> status;
+	
+	@OneToOne
+	private StatusPedido ultimoStatus;
 	
 	@javax.persistence.OrderBy(value = "id")
 	@OneToMany(cascade = {CascadeType.MERGE})
@@ -49,8 +56,9 @@ public class Pedido {
 	@ManyToOne
 	private Endereco enderecoObj;
 	
-	
 	@ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "cli_id")
+	@JsonIgnore
 	private Cliente cliente;
 	
 	public Pedido() {}
@@ -146,17 +154,12 @@ public class Pedido {
 	public void setCliente(Cliente cliente) {
 		this.cliente = cliente;
 	}
+	
+	public void setUltimoStatus(StatusPedido ultimoStatus) {
+		this.ultimoStatus = ultimoStatus;
+	}
 
 	public StatusPedido getUltimoStatus() {
-		StatusPedido ultimoStatus = null;
-		if(status !=null && !status.isEmpty()) {
-			ultimoStatus = status.iterator().next();
-			for(StatusPedido st : status) {
-				if(st.getData().isAfter(ultimoStatus.getData())) {
-					ultimoStatus = st;
-				}
-			}
-		}
 		return ultimoStatus;
 	}
 	
@@ -168,4 +171,8 @@ public class Pedido {
 		}
 		return total;
 	}
+	
+	
+	
+	
 }

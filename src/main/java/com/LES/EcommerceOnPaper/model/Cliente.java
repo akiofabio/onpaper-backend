@@ -49,7 +49,7 @@ public class Cliente extends Usuario{
 	@OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
 	private Set<Cartao> cartoes;
 
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "cliente")
 	@javax.persistence.OrderBy(value = "id")
 	private Set<Pedido> pedidos;
 	
@@ -224,4 +224,14 @@ public class Cliente extends Usuario{
 		}
 		return "É obrigatori ter pelo menos um Endereço de Cobrança";
 	}
+
+	@Override
+	public String toString() {
+		return "Cliente [status=" + status + ", nome=" + nome + ", cpf=" + cpf + ", genero=" + genero
+				+ ", dataNascimento=" + dataNascimento + ", score=" + score + ", telefones=" + telefones
+				+ ", enderecos=" + enderecos + ", cartoes=" + cartoes + ", pedidos=" + pedidos + ", cupons=" + cupons
+				+ ", carrinho=" + carrinho + "]";
+	}
+	
+	
 }

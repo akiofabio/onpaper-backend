@@ -139,6 +139,7 @@ public class PedidoController {
 			statusProc.setData(LocalDateTime.now());
 			statusSet.add(statusProc);
 			request.setStatus(statusSet);
+			request.setUltimoStatus(statusProc);
 			for(Item item : request.getItens()) {
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
 				StatusItem st = new StatusItem("Em Processamento",statusProc.getData());
@@ -151,7 +152,7 @@ public class PedidoController {
 		Cliente cliente = null;
 		for(MeioDePagamento meio : request.getMeioDePagamentos()) {
 			if(meio.getTipo().equals( "Cupom de Troca" ) || meio.getTipo().equals( "Cupom Promocional")){
-				if(cliente != null ) {
+				if(cliente == null ) {
 					Optional<Cliente> clienteOP= clienteService.findByCuponsId(meio.getIdTipo());
 					if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
 						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
@@ -166,16 +167,18 @@ public class PedidoController {
 				clienteService.save(cliente);
 			}
 			else {
-				if(cliente != null ) {
+				if(cliente == null ) {
 					Optional<Cliente> clienteOP= clienteService.findByCartoesId(meio.getIdTipo());
 					if(!clienteOP.isPresent() || clienteOP.isEmpty()) {
-						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado");
+						return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cliente não encontrado " + meio.getIdTipo());
 					}
 					cliente = clienteOP.get();
 				}
 			}
 			
 		}
+		request.setCliente(cliente);
+		System.out.println(request.toString());
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	
@@ -210,6 +213,7 @@ public class PedidoController {
 			}
 		}
 		model.getStatus().add(st);
+		model.setUltimoStatus(st);
 		if(acao.equals("Aprovado")) {
 			for(Item item : model.getItens()) {
 				Optional<Produto> produtoOp = produtoService.findById(item.getIdProduto());
