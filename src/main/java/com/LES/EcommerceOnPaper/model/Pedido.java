@@ -61,6 +61,9 @@ public class Pedido {
 	@JsonIgnore
 	private Cliente cliente;
 	
+	@Column(name = "ped_motivo_devolucao")
+	private String motivoDevolucao;
+	
 	public Pedido() {}
 
 	public Pedido(Set<StatusPedido> pedidoStatus, Set<Item> itens, Set<MeioDePagamento> meioDePagamentos, long idEndereco,
@@ -171,8 +174,4 @@ public class Pedido {
 		}
 		return total;
 	}
-	
-	
-	
-	
 }

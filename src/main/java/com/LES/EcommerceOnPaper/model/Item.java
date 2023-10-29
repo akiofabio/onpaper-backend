@@ -28,6 +28,9 @@ public class Item {
 	@Column(name = "ite_quantidade")
 	private int quantidade;
 	
+	@Column(name = "ite_quantidade_trocada")
+	private int quantidadeTrocada;
+	
 	@Column(name = "ite_preco")
 	private double preco;
 		
@@ -45,6 +48,8 @@ public class Item {
 	
 	@ManyToOne
 	private Produto produto;
+
+	
 	
 	public Item() {}
 
