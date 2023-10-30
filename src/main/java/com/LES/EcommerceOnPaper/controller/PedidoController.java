@@ -232,12 +232,59 @@ public class PedidoController {
 			}
 			Cliente cliente = clienteOp.get();
 			Cupom novoCupom = new Cupom();
-			novoCupom.setDescricao("Cupom de troca do valor: R$ " + model.getTotal());
+			novoCupom.setDescricao("Cupom de troca do valor de R$ " + model.getTotal());
 			novoCupom.setTipo("Cupom de Troca");
 			novoCupom.setValor(model.getTotal());
 			cliente.getCupons().add(novoCupom);
 			clienteService.save(cliente);
 		}
+		else if(acao.equals("Trocado Parcialmente")) {
+			Optional<Cliente> clienteOp = clienteService.findByPedidosId(id);
+			if(!clienteOp.isPresent()){
+				ResponseEntity.status(HttpStatus.NOT_FOUND).body("Cliente do Pedido não Encontrado");
+			}
+			Cliente cliente = clienteOp.get();
+			Cupom novoCupom = new Cupom();
+			double totalDevolvido = 0;
+			for(Item item : model.getItens()) {
+				totalDevolvido += item.getQuantidadeTrocar()*item.getPreco();
+				item.setQuantidadeTrocada(item.getQuantidadeTrocada() + item.getQuantidadeTrocar());
+			}
+			novoCupom.setDescricao("Cupom de troca do valor de R$ " + totalDevolvido);
+			novoCupom.setTipo("Cupom de Troca");
+			novoCupom.setValor(model.getTotal());
+			cliente.getCupons().add(novoCupom);
+			clienteService.save(cliente);
+		}
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+	}
+	
+	@PutMapping("/pedido/trocaParcial")
+	public ResponseEntity<Object> trocaParcial( @RequestBody Pedido pedido) {
+		System.out.println("A1");
+		Optional<Pedido> optional = service.findById(pedido.getId());
+		if(!optional.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Pedido não Encontrado");
+		}
+		Pedido model = optional.get();
+		model.setItens(pedido.getItens());
+		
+		StatusPedido st = new StatusPedido("Em Troca",LocalDateTime.now());
+		for(Item item : model.getItens()) {
+			if(item.getUltimoStatus().getStatus().equals(model.getUltimoStatus().getStatus())) {
+				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
+				StatusItem stI = new StatusItem("Em Troca",st.getData());
+				stItemSet.add(stI);
+				item.setStatus(stItemSet);
+			}
+			else {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Não é permitido mudar estado do pedido intero com um item devolvido/trocado");
+			}
+		}
+		model.getStatus().add(st);
+		model.setUltimoStatus(st);
+		
+		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	

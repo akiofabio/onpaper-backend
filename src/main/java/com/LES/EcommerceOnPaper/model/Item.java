@@ -31,6 +31,9 @@ public class Item {
 	@Column(name = "ite_quantidade_trocada")
 	private int quantidadeTrocada;
 	
+	@Column(name = "ite_quantidade_trocar")
+	private int quantidadeTrocar;
+	
 	@Column(name = "ite_preco")
 	private double preco;
 		
@@ -133,6 +136,23 @@ public class Item {
 
 	public void setProduto(Produto produto) {
 		this.produto = produto;
+	}
+	
+	
+	public int getQuantidadeTrocada() {
+		return quantidadeTrocada;
+	}
+
+	public void setQuantidadeTrocada(int quantidadeTrocada) {
+		this.quantidadeTrocada = quantidadeTrocada;
+	}
+
+	public int getQuantidadeTrocar() {
+		return quantidadeTrocar;
+	}
+
+	public void setQuantidadeTrocar(int quantidadeTrocar) {
+		this.quantidadeTrocar = quantidadeTrocar;
 	}
 
 	public StatusItem getUltimoStatus() {
