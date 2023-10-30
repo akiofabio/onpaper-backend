@@ -50,7 +50,7 @@ public class Cliente extends Usuario{
 	private Set<Cartao> cartoes;
 
 	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER, mappedBy = "cliente")
-	@javax.persistence.OrderBy(value = "id")
+	@javax.persistence.OrderBy(value = "id DESC")
 	private Set<Pedido> pedidos;
 	
 	@javax.persistence.OrderBy(value = "id")

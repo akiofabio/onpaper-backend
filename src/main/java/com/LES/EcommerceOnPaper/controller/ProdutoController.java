@@ -20,19 +20,21 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.LES.EcommerceOnPaper.model.Categoria;
 import com.LES.EcommerceOnPaper.model.Fabricante;
+import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Produto;
 import com.LES.EcommerceOnPaper.service.ProdutoService;
-
+import com.LES.EcommerceOnPaper.service.ItemService;
 @CrossOrigin(origins= "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
 public class ProdutoController {
 	
 	final ProdutoService service;
-
-	public ProdutoController(ProdutoService service) {
+	final ItemService itemService;
+	public ProdutoController(ProdutoService service, ItemService itemService) {
 		super();
 		this.service = service;
+		this.itemService = itemService;
 	}
 	
 	@PostMapping("/produto")
@@ -40,11 +42,32 @@ public class ProdutoController {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
 	}
 	
+	@PutMapping("/produto/updateQuantidade/{id}/{quantidade}")
+	public ResponseEntity<Produto> updateQuantidade(@PathVariable Long id, @PathVariable int quantidade) {
+		System.out.println("A");
+		Optional<Item> optionalItem = itemService.findById(id);
+		if(!optionalItem.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item não Encontrado");
+		}
+		Item item = optionalItem.get();
+		item.setQuantidadeTrocar(0);
+		itemService.save(item);
+		
+		Optional<Produto> optional = service.findById(item.getIdProduto());
+		if(!optional.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
+		}
+		Produto model = optional.get();
+		model.setQuantidade(model.getQuantidade()+ quantidade);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+	}
+	
 	@PutMapping("/produto/{id}")
 	public ResponseEntity<Produto> update(@PathVariable Long id,@RequestBody Produto request) {
 		Optional<Produto> optional = service.findById(id);
 		if(!optional.isPresent()) {
-			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Ativação não Encontrado");
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
 		}
 		Produto model = optional.get();
 		model.setStatus(request.getStatus());

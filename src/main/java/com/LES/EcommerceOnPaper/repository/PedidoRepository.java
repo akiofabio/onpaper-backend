@@ -26,7 +26,8 @@ public interface PedidoRepository extends JpaRepository<Pedido,Long> , JpaSpecif
 			+ "		onpaperdatabase.status_pedidos st2 ON   MaxDates.ultimo_id = st2.stp_id"
 			+ "	WHERE stp_status = 'Em Processamento' or stp_status = 'Em Troca' or "
 			+ "	stp_status = 'Aprovado' or stp_status ='Em Preparo' or stp_status ='Em Troca' or"
-			+ "	stp_status ='Em Preparo' or stp_status ='Enviado' or stp_status ='Troca Aprovada'", nativeQuery = true)
+			+ "	stp_status ='Em Preparo' or stp_status ='Enviado' or stp_status ='Troca Aprovada' or"
+			+ " stp_status = 'Em Troca Parcial' or stp_status = 'Troca Parcial Aprovada'", nativeQuery = true)
 	Optional<List<Pedido>> findByPendentes();
 
 	@Query( value="select * from onpaperdatabase.pedidos p "

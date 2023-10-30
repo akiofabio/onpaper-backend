@@ -225,6 +225,11 @@ public class PedidoController {
 				produto.setQuantidadeBloqueada(produto.getQuantidadeBloqueada()-item.getQuantidade());
 			}
 		}
+		else if(acao.equals("Em Troca")) {
+			for(Item item : model.getItens()) {
+				item.setQuantidadeTrocar(item.getQuantidade());
+			}
+		}
 		else if(acao.equals("Trocado")) {
 			Optional<Cliente> clienteOp = clienteService.findByPedidosId(id);
 			if(!clienteOp.isPresent()){
@@ -252,7 +257,7 @@ public class PedidoController {
 			}
 			novoCupom.setDescricao("Cupom de troca do valor de R$ " + totalDevolvido);
 			novoCupom.setTipo("Cupom de Troca");
-			novoCupom.setValor(model.getTotal());
+			novoCupom.setValor(totalDevolvido);
 			cliente.getCupons().add(novoCupom);
 			clienteService.save(cliente);
 		}
@@ -269,11 +274,11 @@ public class PedidoController {
 		Pedido model = optional.get();
 		model.setItens(pedido.getItens());
 		
-		StatusPedido st = new StatusPedido("Em Troca",LocalDateTime.now());
+		StatusPedido st = new StatusPedido("Em Troca Parcial",LocalDateTime.now());
 		for(Item item : model.getItens()) {
 			if(item.getUltimoStatus().getStatus().equals(model.getUltimoStatus().getStatus())) {
 				Set<StatusItem> stItemSet = new HashSet<StatusItem>();
-				StatusItem stI = new StatusItem("Em Troca",st.getData());
+				StatusItem stI = new StatusItem("Em Troca Parcial",st.getData());
 				stItemSet.add(stI);
 				item.setStatus(stItemSet);
 			}
@@ -283,8 +288,6 @@ public class PedidoController {
 		}
 		model.getStatus().add(st);
 		model.setUltimoStatus(st);
-		
-		
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
 	}
 	
