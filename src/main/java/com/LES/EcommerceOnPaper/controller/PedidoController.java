@@ -177,6 +177,14 @@ public class PedidoController {
 			}
 			
 		}
+		if( ( total + request.getFrete() ) < totalPago) {
+			Cupom novoCupom = new Cupom();
+			novoCupom.setDescricao("Cupom de troca do valor de R$ " + (totalPago - (total + request.getFrete())));
+			novoCupom.setTipo("Troca");
+			novoCupom.setValor((totalPago - (total + request.getFrete())));
+			cliente.getCupons().add(novoCupom);
+			clienteService.save(cliente);
+		}
 		request.setCliente(cliente);
 		System.out.println(request.toString());
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.save(request));
@@ -238,7 +246,7 @@ public class PedidoController {
 			Cliente cliente = clienteOp.get();
 			Cupom novoCupom = new Cupom();
 			novoCupom.setDescricao("Cupom de troca do valor de R$ " + model.getTotal());
-			novoCupom.setTipo("Cupom de Troca");
+			novoCupom.setTipo("Troca");
 			novoCupom.setValor(model.getTotal());
 			cliente.getCupons().add(novoCupom);
 			clienteService.save(cliente);
@@ -256,7 +264,7 @@ public class PedidoController {
 				item.setQuantidadeTrocada(item.getQuantidadeTrocada() + item.getQuantidadeTrocar());
 			}
 			novoCupom.setDescricao("Cupom de troca do valor de R$ " + totalDevolvido);
-			novoCupom.setTipo("Cupom de Troca");
+			novoCupom.setTipo("Troca");
 			novoCupom.setValor(totalDevolvido);
 			cliente.getCupons().add(novoCupom);
 			clienteService.save(cliente);

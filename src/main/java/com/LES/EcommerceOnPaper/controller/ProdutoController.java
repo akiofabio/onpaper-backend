@@ -53,6 +53,8 @@ public class ProdutoController {
 		item.setQuantidadeTrocar(0);
 		itemService.save(item);
 		
+		optionalItem = itemService.findById(id);
+		System.out.println(optionalItem.get().getQuantidadeTrocar());
 		Optional<Produto> optional = service.findById(item.getIdProduto());
 		if(!optional.isPresent()) {
 			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
