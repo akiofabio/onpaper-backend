@@ -342,7 +342,8 @@ public class PedidoController {
 		return service.findByParametros(pesquisas, parametros);
 		
 	}
-
+	
+	
 	/*@GetMapping("/pedido/datas/dataInicio={dataInicio}&dataFinal={dataFinal}")
 	public ResponseEntity<List<Pedido>> getByDatas(@PathVariable Date dataInicio, @PathVariable Date dataFinal) {
 		return ResponseEntity.status(HttpStatus.OK).body(service.findByDatas(dataInicio,dataFinal));
