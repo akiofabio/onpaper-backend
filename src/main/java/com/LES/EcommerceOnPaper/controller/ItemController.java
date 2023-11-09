@@ -24,10 +24,11 @@ import com.LES.EcommerceOnPaper.model.Cupom;
 import com.LES.EcommerceOnPaper.model.DadosGrafico;
 import com.LES.EcommerceOnPaper.model.Item;
 import com.LES.EcommerceOnPaper.model.Pedido;
+import com.LES.EcommerceOnPaper.model.Produto;
 import com.LES.EcommerceOnPaper.model.StatusItem;
 import com.LES.EcommerceOnPaper.service.ClienteService;
 import com.LES.EcommerceOnPaper.service.ItemService;
-
+import com.LES.EcommerceOnPaper.service.ProdutoService;
 @CrossOrigin(origins= "http://localhost:3000")
 @RestController
 @RequestMapping("/api/v1")
@@ -35,10 +36,12 @@ public class ItemController {
 	
 	final ItemService service;
 	final ClienteService clienteService;
-	public ItemController(ItemService service, ClienteService clienteService) {
+	final ProdutoService produtoService;
+	public ItemController(ItemService service, ClienteService clienteService, ProdutoService produtoService) {
 		super();
 		this.service = service;
 		this.clienteService = clienteService;
+		this.produtoService = produtoService;
 	}
 	
 	@PostMapping("/item")
@@ -117,6 +120,27 @@ public class ItemController {
 			clienteService.save(cliente);
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(service.save(model));
+	}
+	
+	@PutMapping("/item/updateQuantidade/{id}/{quantidade}")
+	public ResponseEntity<Item> updateQuantidade(@PathVariable Long id, @PathVariable int quantidade) {
+		System.out.println("A");
+		Optional<Item> optionalItem = service.findById(id);
+		if(!optionalItem.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Item não Encontrado");
+		}
+		Item item = optionalItem.get();
+		item.setQuantidadeTrocar(0);
+		
+		System.out.println(optionalItem.get().getQuantidadeTrocar());
+		Optional<Produto> optional = produtoService.findById(item.getIdProduto());
+		if(!optional.isPresent()) {
+			ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não Encontrado");
+		}
+		Produto model = optional.get();
+		model.setQuantidade(model.getQuantidade()+ quantidade);
+		
+		return ResponseEntity.status(HttpStatus.OK).body(service.save(item));
 	}
 }
 
