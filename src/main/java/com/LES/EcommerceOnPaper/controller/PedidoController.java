@@ -131,7 +131,7 @@ public class PedidoController {
 				}
 			}
 		}
-		if(request.getStatus().size()==1) {
+		if(request.getStatus()!=null && request.getStatus().size()==1) {
 			for(StatusPedido status : request.getStatus()) {
 				request.setUltimoStatus(status);
 			}
