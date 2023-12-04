@@ -131,6 +131,12 @@ public class PedidoController {
 				}
 			}
 		}
+		if(request.getStatus().size()==1) {
+			for(StatusPedido status : request.getStatus()) {
+				request.setUltimoStatus(status);
+			}
+		}
+		
 		if(request.getStatus()==null || request.getStatus().size()==0) {
 			Set<StatusPedido> statusSet = new HashSet<StatusPedido>();
 			
